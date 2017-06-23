@@ -1,0 +1,39 @@
+<?php
+$wallets = [
+    'btc' => [
+        'currency' => 'btc',
+        'address' => '<your public address>',
+        'password' => '<your wallet password>',
+        'walletBalanceCommand' => 'electrum getbalance',
+        'walletTransferCommand' => 'electrum payto -f :minerFee :address :amount',
+    ],
+    'eth' => [
+        'currency' => 'eth',
+        'address' => '<your public address>',
+        'password' => '<your wallet password>',
+        'walletBalanceCommand' => 'curl --data \'{"method":"eth_getBalance","params":[":fromAddress"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
+        'walletTransferCommand' => 'curl --data \'{"method":"personal_sendTransaction","params":[{"from":":fromAddress","to":":address","value":":amount"},":password"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
+    ],
+    'xmr' => [
+        'currency' => 'xmr',
+        'address' => '<your public address>',
+        'password' => '<your wallet password>',
+        'walletBalanceCommand' => "echo :password | monero-wallet-cli --wallet-file <path to your monero wallet> balance",
+        'walletTransferCommand' => "echo :password | monero-wallet-cli --wallet-file <path to your monero wallet> transfer :address :amount",
+    ],
+    'zec' => [
+        'currency' => 'zec',
+        'address' => '<your public address>',
+        'walletBalanceCommand' => 'zcash-cli getbalance',
+        'walletTransferCommand' => 'zcash-cli z_sendmany ":fromAddress" "[{\"amount\": :amount, \"address\": \":address\"}]"',
+    ],
+    'ltc' => [
+        'currency' => 'ltc',
+        'address' => '<your public address>',
+        'password' => '<your wallet password>',
+        'walletBalanceCommand' => 'electrum-ltc getbalance',
+        'walletTransferCommand' => 'electrum-ltc payto -f :minerFee :address :amount',
+    ],
+];
+
+$logfile = "/tmp/shapeshift.log";
