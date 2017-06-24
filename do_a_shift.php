@@ -7,16 +7,23 @@ set_time_limit(0);
 // For these coins, we can do swaps
 $possibleSwaps = array_keys($wallets);
 
-$input = $argv[1];
-$output = $argv[2];
-
-if (!checkAvailability($input, $output)) {
-    echo "$input or $output is not available on Shapeshift. Exiting\n";
+// Get commandline options
+$options = parseArgs($argv);
+if (!$options['input'] || !$options['output']) {
+    echo "Syntax: {$argv[0]} --input=btc --output=eth";
     exit();
 }
 
+$input = strtolower($options['input']);
+$output = strtolower($options['output']);
+
 if (strlen($input) < 3 || strlen($output) < 3) {
     echo "Specify input and output currency";
+    exit();
+}
+
+if (!checkAvailability($input, $output)) {
+    echo "$input or $output is not available on Shapeshift. Exiting\n";
     exit();
 }
 

@@ -8,6 +8,8 @@ include_once "lib.php";
 
 set_time_limit(0);
 
+$options = parseArgs($argv);
+
 // Get conversion rates
 $from = array_keys($wallets);
 $to = array_keys($wallets);
@@ -16,10 +18,14 @@ $to[] = 'USD';
 
 $rates = getMultipleExchangeRates($from, $to);
 
-echo "Date;";
-echo implode(";",array_keys($wallets));
-echo ";EUR Total\n";
+// Header
+if ($options['print-header']) {
+    echo "Date;";
+    echo implode(";",array_keys($wallets));
+    echo ";EUR Total\n";
+}
 
+// Data
 $euroTotal = 0.0;
 $date = date("c");
 echo "$date;";
