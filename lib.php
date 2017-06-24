@@ -70,7 +70,7 @@ function getWalletAmount($wallet)
  * @param $amountToShift
  * @return bool
  */
-function doShift($from, $to, $pair, $amountToShift, $minerFee)
+function doShift($from, $to, $pair, $amountToShift, $minerFee=0)
 {
     if ($amountToShift > 0.0) {
         // First talk to shapeshift
@@ -148,7 +148,7 @@ function getMarketInfo($pair)
     return $data;
 }
 
-function sendToAddress($fromWallet, $toAddress, $amount, $minerFee)
+function sendToAddress($fromWallet, $toAddress, $amount, $minerFee=0)
 {
     $command = str_replace([':address', ':amount', ':minerFee', ':password', ':fromAddress'], [$toAddress, $amount, $minerFee, $fromWallet['password'], $fromWallet['address']], $fromWallet['walletTransferCommand']);
     echo $command . "\n";

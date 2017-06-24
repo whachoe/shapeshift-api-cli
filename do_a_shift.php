@@ -54,6 +54,7 @@ $pair = "{$input}_{$output}";
 
 // First getting some info from shapeshift
 $marketInfo = getMarketInfo($pair);
+
 $rate = $marketInfo['rate'];
 $limit = (float) $marketInfo['limit'];
 $min = (float) $marketInfo['min'];
@@ -83,7 +84,7 @@ $amountToShift = (float)min($walletAmount-$minerFee, $limit);
 
 // Ask for shift
 if ($amountToShift > 0.0) {
-    if (!doShift($wallet, $pair, $amountToShift, $minerFee)) {
+    if (!doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
         echo "Failed to shift: $input -> $output ($amountToShift). Balance of wallet: $walletAmount\n";
         exit();
     }
