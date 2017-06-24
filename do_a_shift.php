@@ -15,22 +15,37 @@ if (!checkAvailability($input, $output)) {
     exit();
 }
 
-echo "Working on shifting: $input to $output\n";
 if (strlen($input) < 3 || strlen($output) < 3) {
     echo "Specify input and output currency";
     exit();
 }
 
-// pair = input_output
-$pair = "{$input}_{$output}";
+// Switch USD for LTC
+if ($input == 'usd') {
+    $input = 'ltc';
+}
+
+if ($output == 'usd') {
+    $output = 'ltc';
+}
+
+if ($input == $output) {
+    echo "Can't switch between the same currencies ($input). Exiting\n";
+    exit();
+}
 
 // Check if we can shift for this pair
 if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
     echo "Input or output is USD . Please follow up manually\n";
-    echo "Pair: $pair\n";
     exit();
 }
 
+echo "Working on shifting: $input to $output\n";
+
+// pair = input_output
+$pair = "{$input}_{$output}";
+
+// First getting some info from shapeshift
 $marketInfo = getMarketInfo($pair);
 $rate = $marketInfo['rate'];
 $limit = (float) $marketInfo['limit'];
