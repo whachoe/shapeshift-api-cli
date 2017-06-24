@@ -19,7 +19,7 @@ $to[] = 'USD';
 $rates = getMultipleExchangeRates($from, $to);
 
 // Header
-if ($options['print-header']) {
+if (isset($options['print-header'])) {
     echo "Date;";
     echo implode(";",array_keys($wallets));
     echo ";EUR Total\n";
