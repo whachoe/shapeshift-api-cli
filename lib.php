@@ -98,8 +98,7 @@ function doShift($from, $to, $pair, $amountToShift, $minerFee)
         $shapeshiftAddress = $data['deposit'];
 
         // Now send the money
-        $command = str_replace([':address', ':amount', ':minerFee', ':password', ':fromAddress'], [$shapeshiftAddress, $amountToShift, $minerFee, $from['password'], $from['address']], $from['walletTransferCommand']);
-        echo $command . "\n";
+        sendToAddress($from, $shapeshiftAddress, $amountToShift, $minerFee);
     } else {
         echo "Amount to shift is too low: $amountToShift";
         return false;
@@ -147,6 +146,15 @@ function getMarketInfo($pair)
     }
 
     return $data;
+}
+
+function sendToAddress($fromWallet, $toAddress, $amount, $minerFee)
+{
+    $command = str_replace([':address', ':amount', ':minerFee', ':password', ':fromAddress'], [$toAddress, $amount, $minerFee, $fromWallet['password'], $fromWallet['address']], $fromWallet['walletTransferCommand']);
+    echo $command . "\n";
+
+    // Uncomment when testing is done:
+    // `$command`;
 }
 
 function getExchangeRate($from, $to)
