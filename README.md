@@ -17,13 +17,39 @@ There's a whole lot to set up to get this stuff working. For each cryptocoin, we
 `curl --data '{"method":"personal_newAccount","params":["your_pw"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545`
 
 ## BTC
-`apt-get install python-qt4 python-pip`
+`apt-get install python-qt4 python-pip`     
 `sudo pip2 install https://download.electrum.org/2.8.3/Electrum-2.8.3.tar.gz`
 
 ### New account
-`electrum create`
+`electrum create`    
 
 ## LTC
-`apt-get install python-slowaes`
+`apt-get install python-slowaes`     
 `pip2 install https://electrum-ltc.org/download/Electrum-LTC-2.6.4.2.tar.gz`
+
+### New account
+`electrum-ltc create`    
+
+## Zcash
+
+### Get Zcash
+https://z.cash/download.html      
+
+
+## Monero
+
+### Get Monero 
+https://getmonero.org/downloads/      
+
+### Start monero
+`monerod --detach`
+
+### Make wallet
+`monero-wallet-cli`      
+Now follow the instructions
+
+
+
+ 
+
 
