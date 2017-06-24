@@ -4,7 +4,7 @@ $wallets = [
         'currency' => 'btc',
         'address' => '<your public address>',
         'password' => '<your wallet password>',
-        'walletBalanceCommand' => 'electrum getbalance',
+        'walletBalanceCommand' => 'electrum daemon load_wallet; electrum getbalance',
         'walletTransferCommand' => 'electrum payto -f :minerFee :address :amount',
     ],
     'eth' => [
