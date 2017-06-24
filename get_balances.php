@@ -8,14 +8,14 @@ include_once "lib.php";
 
 set_time_limit(0);
 
-echo "Date ;";
-echo implode("; ",array_keys($wallets));
+echo "Date; ";
+echo implode(" ; ",array_keys($wallets));
 echo "; \n";
 
 $date = date("c");
 echo "$date ;";
 foreach ($wallets as $wallet) {
     $balance = getWalletAmount($wallet);
-    echo "{$wallet['currency']}: $balance ; ";
+    echo "$balance ; ";
 }
 echo "\n";
