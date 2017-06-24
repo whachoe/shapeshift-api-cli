@@ -77,10 +77,15 @@ function doShift($from, $to, $pair, $amountToShift, $minerFee)
         $command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}' https://shapeshift.io/shift";
         $output = `$command`;
         try {
-
+            echo "Shapeshift answer: $output\n";
             $data = json_decode($output);
         } catch (\Exception $e) {
             echo "Something went wrong while calling Shapeshift: {$e->getMessage()}\n";
+            exit();
+        }
+
+        if (isset($data['error'])) {
+            echo "Shapeshift error: {$data['error']}. Exiting\n";
             exit();
         }
 
@@ -114,8 +119,12 @@ function checkAvailability($input, $output)
 {
     $data = file_get_contents("https://shapeshift.io/getcoins");
     $coins = json_decode($data, true);
-    if (!$coins) {
-        echo "Error getting availability. Exiting";
+    if (!$coins || isset($coins['error'])) {
+        echo "Error getting availability.\n";
+        if (isset($coins['error'])) {
+            echo "Shapeshift error: {$coins['error']}\n";
+        }
+        echo "Exiting.\n";
         exit();
     }
 
@@ -129,6 +138,11 @@ function getMarketInfo($pair)
         $data = json_decode($string, true);
     } catch (\Exception $e) {
         echo "Error getting MarketInfo: {$e->getMessage()}";
+        exit();
+    }
+
+    if (isset($data['error'])) {
+        echo "Shapeshift error: {$data['error']}. Exiting\n";
         exit();
     }
 
