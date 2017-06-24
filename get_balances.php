@@ -15,7 +15,6 @@ $to[] = 'EUR';
 $to[] = 'USD';
 
 $rates = getMultipleExchangeRates($from, $to);
-var_dump($rates);
 
 echo "Date;";
 echo implode(";",array_keys($wallets));
