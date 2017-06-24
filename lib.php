@@ -44,6 +44,18 @@ function getWalletAmount($wallet)
         case 'zec':
             $balance = trim(`$command`);
             break;
+        case 'ltc':
+            $output = `$command`;
+            try {
+                $data = json_decode($output, true);
+                if ($data['confirmed']) {
+                    $balance = $data['confirmed'];
+                }
+            } catch (\Exception $e) {
+                echo "LTC: Error getting wallet amount";
+                exit();
+            }
+            break;
     }
 
     return (float)$balance;
