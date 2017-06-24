@@ -19,12 +19,14 @@ var_dump($rates);
 
 echo "Date;";
 echo implode(";",array_keys($wallets));
-echo ";\n";
+echo ";EUR Total\n";
 
+$euroTotal = 0.0;
 $date = date("c");
 echo "$date;";
 foreach ($wallets as $wallet) {
     $balance = getWalletAmount($wallet);
+    $euroTotal += $balance * $rates[strtoupper($wallet['currency'])]['EUR'];
     echo "$balance;";
 }
-echo "\n";
+echo "$euroTotal;\n";
