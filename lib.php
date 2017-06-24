@@ -20,7 +20,7 @@ function getWalletAmount($wallet)
         case 'eth':
             $output = `$command`;
             try {
-                $data = json_decode($output);
+                $data = json_decode($output, true);
                 if ($data['result']) {
                     $balance = $data['result'];
                 }
@@ -32,7 +32,7 @@ function getWalletAmount($wallet)
         case 'btc':
             $output = `$command`;
             try {
-                $data = json_decode($output);
+                $data = json_decode($output, true);
                 if ($data['confirmed']) {
                     $balance = $data['confirmed'];
                 }
