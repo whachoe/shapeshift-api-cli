@@ -121,3 +121,23 @@ function getMarketInfo($pair) {
 
     return $data;
 }
+
+function getExchangeRate($from, $to)
+{
+    $from = strtoupper($from);
+    $to = strtoupper($to);
+    $data = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=$from&tsyms=$to");
+    $result = json_decode($data, true);
+
+    return $result[$to];
+}
+
+function getMultipleExchangeRates($fromArray, $toArray)
+{
+    $from = implode(",", array_map("strtoupper", $fromArray));
+    $to = implode(",", array_map("strtoupper", $toArray));
+    $data = file_get_contents("https://min-api.cryptocompare.com/data/pricemulti?fsyms=$from&tsyms=$to");
+    $result = json_decode($data, true);
+
+    return $result;
+}

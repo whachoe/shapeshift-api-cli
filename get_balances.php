@@ -8,6 +8,15 @@ include_once "lib.php";
 
 set_time_limit(0);
 
+// Get conversion rates
+$from = array_keys($wallets);
+$to = array_keys($wallets);
+$to[] = 'EUR';
+$to[] = 'USD';
+
+$rates = getMultipleExchangeRates($from, $to);
+var_dump($rates);
+
 echo "Date;";
 echo implode(";",array_keys($wallets));
 echo ";\n";
