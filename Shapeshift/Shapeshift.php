@@ -94,7 +94,7 @@ class Shapeshift {
     {
         if ($amountToShift > 0.0) {
             // First talk to shapeshift
-            $command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}' {$this->baseUrl}/shift";
+            $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}' {$this->baseUrl}/shift";
             $output = `$command`;
             try {
                 echo "Shapeshift answer: $output\n";
@@ -146,7 +146,7 @@ class Shapeshift {
      */
     public function cancelPending($address)
     {
-        $command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"address\":\"{$address}\"}' {$this->baseUrl}/cancelpending";
+        $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '{\"address\":\"{$address}\"}' {$this->baseUrl}/cancelpending";
         $response = `$command`;
 
         $data = $this->catchError($response);
