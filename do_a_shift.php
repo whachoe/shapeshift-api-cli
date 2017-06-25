@@ -10,7 +10,7 @@ $possibleSwaps = array_keys($wallets);
 
 // Get commandline options
 $options = parseArgs($argv);
-if (!$options['input'] || !$options['output']) {
+if (!isset($options['input']) || !isset($options['output'])) {
     echo "Syntax: {$argv[0]} --input=btc --output=eth";
     exit();
 }
@@ -50,11 +50,18 @@ if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
 
 echo "Working on shifting: $input to $output\n";
 
+$shifter = new \Shapeshift\Shapeshift();
+
 // pair = input_output
 $pair = "{$input}_{$output}";
 
 // First getting some info from shapeshift
-$marketInfo = getMarketInfo($pair);
+$marketInfo = $shifter->getMarketInfo($pair);
+
+if (!$marketInfo) {
+    echo "No marketinfo found. Exiting";
+    exit(1);
+}
 
 $rate = $marketInfo['rate'];
 $limit = (float) $marketInfo['limit'];
@@ -63,12 +70,12 @@ $minerFee = (float) $marketInfo['minerFee'];
 
 if (!$rate) {
     echo "No rate for $pair found. Exiting\n";
-    exit();
+    exit(1);
 }
 
 if (!$limit || !$min) {
     echo "No valid limit ($limit) or minimum ($min) found. Exiting\n";
-    exit();
+    exit(1);
 }
 
 // Get wallet amount for input
@@ -85,7 +92,7 @@ $amountToShift = (float)min($walletAmount-$minerFee, $limit);
 
 // Ask for shift
 if ($amountToShift > 0.0) {
-    if (!doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
+    if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
         echo "Failed to shift: $input -> $output ($amountToShift). Balance of wallet: $walletAmount\n";
         exit();
     }
