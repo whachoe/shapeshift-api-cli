@@ -8,14 +8,20 @@
 function getWalletAmount($wallet)
 {
     $balance = 0.0;
-    $command = str_replace([':password', ':fromAddress'], [$wallet['password'], $wallet['address']], $wallet['walletBalanceCommand']);
+    $command = str_replace([':user', ':password', ':fromAddress'], [$wallet['user'], $wallet['password'], $wallet['address']], $wallet['walletBalanceCommand']);
 
     switch ($wallet['currency']) {
         case 'xmr':
             $output = `$command`;
-            $matches = [];
-            preg_match('/Balance: (.*),/', $output, $matches);
-            $balance = $matches[1];
+            try {
+                $data = json_decode($output, true);
+                if (isset($data['result']) && isset($data['result']['balance'])) {
+                    $balance = (float) $data['result']['balance']/MONERO_BASE_CONVERSION;
+                }
+            } catch (\Exception $e) {
+                echo "XMR: Error getting wallet amount";
+                exit();
+            }
             break;
         case 'eth':
             $output = `$command`;
@@ -150,6 +156,12 @@ function getMarketInfo($pair)
 
 function sendToAddress($fromWallet, $toAddress, $amount, $minerFee=0)
 {
+    // Do something special for monero
+    if ($fromWallet['currency'] == 'xmr') {
+        $amount = intval($amount * MONERO_BASE_CONVERSION);
+        $minerFee = intval($minerFee * MONERO_BASE_CONVERSION);
+    }
+
     $command = str_replace([':address', ':amount', ':minerFee', ':password', ':fromAddress'], [$toAddress, $amount, $minerFee, $fromWallet['password'], $fromWallet['address']], $fromWallet['walletTransferCommand']);
     echo $command . "\n";
 

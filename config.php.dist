@@ -1,8 +1,12 @@
 <?php
+define('LOGFILE', "/var/log/shapeshift.log");
+define("MONERO_BASE_CONVERSION", 1000000000000.0);
+
 $wallets = [
     'btc' => [
         'currency' => 'btc',
         'address' => '<your public address>',
+        'user' => '', // can be left empty for this currency
         'password' => '<your wallet password>',
         'walletBalanceCommand' => 'electrum daemon load_wallet; electrum getbalance',
         'walletTransferCommand' => 'electrum payto -f :minerFee :address :amount',
@@ -10,6 +14,7 @@ $wallets = [
     'eth' => [
         'currency' => 'eth',
         'address' => '<your public address>',
+        'user' => '', // can be left empty for this currency
         'password' => '<your wallet password>',
         'walletBalanceCommand' => 'curl --data \'{"method":"eth_getBalance","params":[":fromAddress"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
         'walletTransferCommand' => 'curl --data \'{"method":"personal_sendTransaction","params":[{"from":":fromAddress","to":":address","value":":amount"},":password"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
@@ -17,23 +22,25 @@ $wallets = [
     'xmr' => [
         'currency' => 'xmr',
         'address' => '<your public address>',
-        'password' => '<your wallet password>',
-        'walletBalanceCommand' => "echo :password | monero-wallet-cli --wallet-file <path to your monero wallet> balance",
-        'walletTransferCommand' => "echo :password | monero-wallet-cli --wallet-file <path to your monero wallet> transfer :address :amount",
+        'user' => '<your json-rpc-user>',
+        'password' => '<your json-rpc-password>',
+        'walletBalanceCommand' => "curl -X POST http://127.0.0.1:18082/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"getbalance\"}' -H 'Content-Type: application/json' --digest -u cjpa::password",
+        'walletTransferCommand' => "curl -X POST http://127.0.0.1:18082/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"destinations\":[{\"amount\"::amount,\"address\":\":address\"}]}}' -H 'Content-Type: application/json' --digest -u cjpa::password",
     ],
     'zec' => [
         'currency' => 'zec',
         'address' => '<your public address>',
+        'user' => '', // can be left empty for this currency
+        'password' => '', // can be left empty for this currency
         'walletBalanceCommand' => 'zcash-cli getbalance',
         'walletTransferCommand' => 'zcash-cli z_sendmany ":fromAddress" "[{\"amount\": :amount, \"address\": \":address\"}]"',
     ],
     'ltc' => [
         'currency' => 'ltc',
         'address' => '<your public address>',
+        'user' => '', // can be left empty for this currency
         'password' => '<your wallet password>',
         'walletBalanceCommand' => 'electrum-ltc getbalance',
         'walletTransferCommand' => 'electrum-ltc payto -f :minerFee :address :amount',
     ],
 ];
-
-$logfile = "/tmp/shapeshift.log";

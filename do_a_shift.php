@@ -22,11 +22,6 @@ if (strlen($input) < 3 || strlen($output) < 3) {
     exit();
 }
 
-if (!checkAvailability($input, $output)) {
-    echo "$input or $output is not available on Shapeshift. Exiting\n";
-    exit();
-}
-
 // Switch USD for LTC
 if ($input == 'usd') {
     $input = 'ltc';
@@ -34,6 +29,11 @@ if ($input == 'usd') {
 
 if ($output == 'usd') {
     $output = 'ltc';
+}
+
+if (!checkAvailability($input, $output)) {
+    echo "$input or $output is not available on Shapeshift. Exiting\n";
+    exit();
 }
 
 if ($input == $output) {
@@ -57,7 +57,7 @@ $marketInfo = getMarketInfo($pair);
 
 $rate = $marketInfo['rate'];
 $limit = (float) $marketInfo['limit'];
-$min = (float) $marketInfo['min'];
+$min = (float) $marketInfo['minimum'];
 $minerFee = (float) $marketInfo['minerFee'];
 
 if (!$rate) {
