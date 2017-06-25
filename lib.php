@@ -18,7 +18,7 @@ function getWalletAmount($wallet)
             try {
                 $data = json_decode($output, true);
                 if (isset($data['result']) && isset($data['result']['balance'])) {
-                    $balance = (float) $data['result']['balance']/MONERO_BASE_CONVERSION;
+                    $balance = (float) $data['result']['balance']/\Payment\XMRPayment::MONERO_BASE_CONVERSION;
                 }
             } catch (\Exception $e) {
                 echo "XMR: Error getting wallet amount";

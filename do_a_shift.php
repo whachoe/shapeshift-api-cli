@@ -97,5 +97,3 @@ if ($amountToShift > 0.0) {
         exit();
     }
 }
-
-

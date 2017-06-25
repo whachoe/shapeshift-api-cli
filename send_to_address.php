@@ -22,10 +22,10 @@ if (!$wallet) {
     exit();
 }
 
-$paymentProcessor = Payment::factory($from);
+$paymentProcessor = Payment\Payment::factory($from);
 $paymentProcessor->toAddress = $options['to'];
 $paymentProcessor->amount = $options['amount'];
-if ($paymentProcessor instanceof XMRPayment) {
+if ($paymentProcessor instanceof \Payment\XMRPayment) {
     $paymentProcessor->paymentID = $options['paymentID'];
 }
 $paymentProcessor->send();
