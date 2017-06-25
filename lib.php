@@ -166,7 +166,7 @@ function sendToAddress($fromWallet, $toAddress, $amount, $minerFee=0)
     echo $command . "\n";
 
     // Uncomment when testing is done:
-    // `$command`;
+    // echo `$command`; echo "\n";
 }
 
 function getExchangeRate($from, $to)
