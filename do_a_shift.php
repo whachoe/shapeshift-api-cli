@@ -1,6 +1,6 @@
 <?php
 include_once "config.php";
-include_once "lib.php";
+require_once "lib.php";
 
 set_time_limit(0);
 

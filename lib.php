@@ -1,4 +1,6 @@
 <?php
+require_once('Payment/Payment.php');
+
 /**
  * Check the balance of a wallet
  *
@@ -84,7 +86,7 @@ function doShift($from, $to, $pair, $amountToShift, $minerFee=0)
         $output = `$command`;
         try {
             echo "Shapeshift answer: $output\n";
-            $data = json_decode($output);
+            $data = json_decode($output, true);
         } catch (\Exception $e) {
             echo "Something went wrong while calling Shapeshift: {$e->getMessage()}\n";
             exit();
@@ -101,10 +103,11 @@ function doShift($from, $to, $pair, $amountToShift, $minerFee=0)
             exit();
         }
 
-        $shapeshiftAddress = $data['deposit'];
-
-        // Now send the money
-        sendToAddress($from, $shapeshiftAddress, $amountToShift, $minerFee);
+        $paymentProcessor = Payment::factory($from);
+        $paymentProcessor->amount = $amountToShift;
+        if ($paymentProcessor->parseShapeshiftResponse($data)) {
+            return $paymentProcessor->send();
+        }
     } else {
         echo "Amount to shift is too low: $amountToShift";
         return false;
@@ -152,21 +155,6 @@ function getMarketInfo($pair)
     }
 
     return $data;
-}
-
-function sendToAddress($fromWallet, $toAddress, $amount, $minerFee=0)
-{
-    // Do something special for monero
-    if ($fromWallet['currency'] == 'xmr') {
-        $amount = intval($amount * MONERO_BASE_CONVERSION);
-        $minerFee = intval($minerFee * MONERO_BASE_CONVERSION);
-    }
-
-    $command = str_replace([':address', ':amount', ':minerFee', ':password', ':fromAddress'], [$toAddress, $amount, $minerFee, $fromWallet['password'], $fromWallet['address']], $fromWallet['walletTransferCommand']);
-    echo $command . "\n";
-
-    // Uncomment when testing is done:
-    // echo `$command`; echo "\n";
 }
 
 function getExchangeRate($from, $to)
