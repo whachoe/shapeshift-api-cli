@@ -8,6 +8,8 @@ set_time_limit(0);
 // For these coins, we can do swaps
 $possibleSwaps = array_keys($wallets);
 
+$shifter = new \Shapeshift\Shapeshift();
+
 // Get commandline options
 $options = parseArgs($argv);
 if (!isset($options['input']) || !isset($options['output'])) {
@@ -32,7 +34,7 @@ if ($output == 'usd') {
     $output = 'ltc';
 }
 
-if (!checkAvailability($input, $output)) {
+if (!$shifter->checkAvailability($input, $output)) {
     echo "$input or $output is not available on Shapeshift. Exiting\n";
     exit();
 }
@@ -50,7 +52,7 @@ if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
 
 echo "Working on shifting: $input to $output\n";
 
-$shifter = new \Shapeshift\Shapeshift();
+
 
 // pair = input_output
 $pair = "{$input}_{$output}";
