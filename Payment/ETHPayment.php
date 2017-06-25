@@ -1,6 +1,5 @@
 <?php
-
-require 'Payment.php';
+namespace Payment;
 
 class ETHPayment extends Payment
 {

@@ -1,9 +1,6 @@
 <?php
-require_once 'BTCPayment.php';
-require_once 'ETHPayment.php';
-require_once 'XMRPayment.php';
-require_once 'LTCPayment.php';
-require_once 'ZECPayment.php';
+namespace Payment;
+
 
 abstract class Payment
 {
