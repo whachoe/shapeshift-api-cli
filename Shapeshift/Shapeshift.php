@@ -94,7 +94,9 @@ class Shapeshift {
     {
         if ($amountToShift > 0.0) {
             // First talk to shapeshift
-            $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}' {$this->baseUrl}/shift";
+            $payload = "{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}";
+            echo $payload; die;
+            $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '$payload' {$this->baseUrl}/shift";
             $output = `$command`;
             try {
                 echo "Shapeshift answer: $output\n";
