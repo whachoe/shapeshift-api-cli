@@ -30,7 +30,7 @@ function getWalletAmount($wallet)
             try {
                 $data = json_decode($output, true);
                 if ($data['result']) {
-                    $balance = hexdec($data['result']) / 1000000000000000000);
+                    $balance = hexdec($data['result']) / 1000000000000000000;
                 }
             } catch (\Exception $e) {
                 echo "ETH: Error getting wallet amount";
