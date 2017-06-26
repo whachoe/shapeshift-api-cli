@@ -40,4 +40,26 @@ class XMRPayment extends Payment
 
         return $this->executeSend($command);
     }
+
+    public function getWalletAmount()
+    {
+        $balance = 0;
+        $output = parent::getWalletAmount();
+        try {
+            $data = json_decode($output, true);
+            if (isset($data['result']) && isset($data['result']['balance'])) {
+                $balance = $data['result']['balance'];
+            }
+        } catch (\Exception $e) {
+            echo "XMR: Error getting wallet amount";
+            exit();
+        }
+
+        return $balance;
+    }
+
+    public function getWalletAmountFriendly()
+    {
+        return $this->getWalletAmount() / self::MONERO_BASE_CONVERSION;
+    }
 }

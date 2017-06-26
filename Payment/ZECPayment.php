@@ -30,4 +30,15 @@ class ZECPayment extends Payment
 
         return $this->executeSend($command);
     }
+
+    public function getWalletAmount()
+    {
+        return trim(parent::getWalletAmount());
+    }
+
+    public function getWalletAmountFriendly()
+    {
+        return $this->getWalletAmount();
+    }
+
 }
