@@ -12,6 +12,7 @@ class ETHPayment extends Payment
                 $data = json_decode($response, true);
 
             } catch (\Exception $e) {
+                echo "Error parsing shapeshift message: ".$e->getMessage();
                 return false;
             }
         } else {
@@ -24,7 +25,8 @@ class ETHPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            throw new \Exception("ETH send: Missing parameters");
+            echo "ETH: Missing parameters. We need 'toAddress' and 'amount";
+            return false;
         }
 
         // Make sure the amount is in HEX

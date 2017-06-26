@@ -93,9 +93,6 @@ if ($walletAmount < $min) {
 // amount_to_shift = min(limit, wallet_amount)
 $amountToShift = min($walletAmount*90/100, $limit);
 
-echo $amountToShift;
-die;
-
 // Ask for shift
 if ($amountToShift > 0) {
     if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
