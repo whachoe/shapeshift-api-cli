@@ -37,7 +37,7 @@ $date = date("c");
 echo "$date;";
 foreach ($wallets as $wallet) {
     $p = \Payment\Payment::factory($wallet);
-    $balance = $p->getWalletAmountFriendly($wallet);
+    $balance = $p->getWalletAmountFriendly();
     $euroTotal += $balance * $rates[strtoupper($wallet['currency'])]['EUR'];
     echo "$balance;";
 }

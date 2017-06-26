@@ -52,7 +52,7 @@ class ETHPayment extends Payment
         try {
             $data = json_decode($output, true);
             if (isset($data['result'])) {
-                $balance = hexdec($data['result']);
+                $balance = hexdec(str_replace("0x", "", $data['result']));
             }
         } catch (\Exception $e) {
             echo "ETH: Error getting wallet amount";
@@ -64,8 +64,7 @@ class ETHPayment extends Payment
 
     public function getWalletAmountFriendly()
     {
-        $hex = str_replace("0x", "", $this->getWalletAmount());
-        return hexdec($hex) / self::WEI;
+        return $this->getWalletAmount() / self::WEI;
     }
 
     /**
