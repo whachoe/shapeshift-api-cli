@@ -24,7 +24,8 @@ class BTCPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            throw new Exception("BTC send: Missing parameters");
+            echo "BTC: Missing parameters. We need 'toAddress' and 'amount";
+            return false;
         }
 
         $str_replace_from = [':address', ':amount'];

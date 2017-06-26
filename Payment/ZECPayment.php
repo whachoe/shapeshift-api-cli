@@ -23,7 +23,9 @@ class ZECPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            throw new Exception("ETH send: Missing parameters");
+            echo "ZEC: Missing parameters. We need 'toAddress' and 'amount";
+            return false;
+
         }
 
         $str_replace_from = [':address', ':amount', ':fromAddress'];

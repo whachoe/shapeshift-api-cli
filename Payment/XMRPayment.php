@@ -26,7 +26,9 @@ class XMRPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->paymentID || !$this->amount) {
-            throw new Exception("XMR send: Missing parameters");
+            echo "XMR: Missing parameters. We need 'toAddress' and 'amount";
+            return false;
+
         }
 
         // Convert amount if it's still in decimal notation

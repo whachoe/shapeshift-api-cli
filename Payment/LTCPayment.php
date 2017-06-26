@@ -26,7 +26,8 @@ class LTCPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            throw new Exception("LTC send: Missing parameters");
+            echo "LTC: Missing parameters. We need 'toAddress' and 'amount";
+            return false;
         }
 
         $str_replace_from = [':address', ':amount'];
