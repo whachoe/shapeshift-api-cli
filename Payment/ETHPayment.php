@@ -63,6 +63,6 @@ class ETHPayment extends Payment
 
     public function getWalletAmountFriendly()
     {
-        return $this->getWalletAmount() / self::WEI;
+        return hexdec($this->getWalletAmount()) / self::WEI;
     }
 }
