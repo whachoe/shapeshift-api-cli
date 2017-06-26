@@ -46,7 +46,7 @@ class ETHPayment extends Payment
 
     public function getWalletAmount()
     {
-        $balance = 0;
+        $balance = "0";
         $output = parent::getWalletAmount();
         try {
             $data = json_decode($output, true);
@@ -63,6 +63,7 @@ class ETHPayment extends Payment
 
     public function getWalletAmountFriendly()
     {
-        return hexdec($this->getWalletAmount()) / self::WEI;
+        $hex = $this->getWalletAmount();
+        return hexdec($hex) / self::WEI;
     }
 }
