@@ -91,12 +91,18 @@ if ($walletAmount < $min) {
 }
 
 // amount_to_shift = min(limit, wallet_amount)
-$amountToShift = (float)min($walletAmount*90/100, $limit);
+$amountToShift = min($walletAmount*90/100, $limit);
+
+echo $amountToShift;
+die;
 
 // Ask for shift
-if ($amountToShift > 0.0) {
+if ($amountToShift > 0) {
     if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
-        echo "Failed to shift: $input -> $output ($amountToShift). Balance of wallet: $walletAmount\n";
+        echo "Failed to shift: $input -> $output (".strval($amountToShift). "). Balance of wallet: $walletAmount\n";
         exit();
     }
+} else {
+    echo "Error: Amount was 0 or negative:".strval($amountToShift)."\n";
+    exit();
 }

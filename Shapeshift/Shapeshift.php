@@ -95,7 +95,7 @@ class Shapeshift {
         if ($amountToShift > 0.0) {
             // First talk to shapeshift
             $payload = "{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}";
-            echo $payload; die;
+
             $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '$payload' {$this->baseUrl}/shift";
             $output = `$command`;
             try {
@@ -123,7 +123,7 @@ class Shapeshift {
                 return $paymentProcessor->send();
             }
         } else {
-            echo "Amount to shift is too low: $amountToShift";
+            echo "Amount to shift is too low: ".strval($amountToShift);
             return false;
         }
 
