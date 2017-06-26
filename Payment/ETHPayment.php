@@ -29,7 +29,7 @@ class ETHPayment extends Payment
 
         // Make sure the amount is in HEX
         $amountstring = strval($this->amount);
-        if (!strpos('0x')) {
+        if (strpos('0x', $amountstring) === false) {
             $this->amount = self::toHex($this->amount);
         }
 
