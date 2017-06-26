@@ -53,7 +53,7 @@ if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
 
 echo "Working on shifting: $input to $output\n";
 
-
+$paymentProcessor = \Payment\Payment::factory($wallets[$input]);
 
 // pair = input_output
 $pair = "{$input}_{$output}";
@@ -67,9 +67,9 @@ if (!$marketInfo) {
 }
 
 $rate = $marketInfo['rate'];
-$limit = (float) $marketInfo['limit'];
-$min = (float) $marketInfo['minimum'];
-$minerFee = (float) $marketInfo['minerFee'];
+$limit = $paymentProcessor->toBase($marketInfo['limit']);
+$min = $paymentProcessor->toBase($marketInfo['minimum']);
+$minerFee = $paymentProcessor->toBase($marketInfo['minerFee']);
 
 if (!$rate) {
     echo "No rate for $pair found. Exiting\n";
@@ -82,7 +82,7 @@ if (!$limit || !$min) {
 }
 
 // Get wallet amount for input
-$walletAmount = (float)getWalletAmount($wallets[$input]);
+$walletAmount = $paymentProcessor->getWalletAmount();
 
 // Make sure we have at least minimum to work with
 if ($walletAmount < $min) {

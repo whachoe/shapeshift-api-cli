@@ -27,6 +27,12 @@ class ETHPayment extends Payment
             throw new \Exception("ETH send: Missing parameters");
         }
 
+        // Make sure the amount is in HEX
+        $amountstring = strval($this->amount);
+        if (!strpos('0x')) {
+            $this->amount = self::toHex($this->amount);
+        }
+
         $str_replace_from = [':address', ':amount', ':password', ':fromAddress'];
         $str_replace_to = [$this->toAddress, $this->amount, $this->walletConfig['password'], $this->fromAddress];
         $command = str_replace($str_replace_from, $str_replace_to, $this->transferCommand);
@@ -34,14 +40,9 @@ class ETHPayment extends Payment
         return $this->executeSend($command);
     }
 
-    public static function toBase($ethAmount)
-    {
-        return $ethAmount * self::WEI;
-    }
-
     public static function toHex($wei)
     {
-        return dechex($wei);
+        return '0x'.dechex($wei);
     }
 
     public function getWalletAmount()
@@ -51,7 +52,7 @@ class ETHPayment extends Payment
         try {
             $data = json_decode($output, true);
             if (isset($data['result'])) {
-                $balance = $data['result'];
+                $balance = hexdec($data['result']);
             }
         } catch (\Exception $e) {
             echo "ETH: Error getting wallet amount";
@@ -65,5 +66,15 @@ class ETHPayment extends Payment
     {
         $hex = $this->getWalletAmount();
         return hexdec($hex) / self::WEI;
+    }
+
+    /**
+     * Used to convert Shifter/Exchange output values into the value our Wallet understands
+     * @param $amount
+     * @return mixed
+     */
+    public static function toBase($amount)
+    {
+        return $amount * self::WEI;
     }
 }

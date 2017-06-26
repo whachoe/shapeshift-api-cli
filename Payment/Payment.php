@@ -13,8 +13,8 @@ abstract class Payment
 
     abstract public function parseShapeshiftResponse($response);
     abstract public function send();
-
     abstract public function getWalletAmountFriendly();
+    abstract public static function toBase($amount);
 
     public function __construct($walletConfig)
     {

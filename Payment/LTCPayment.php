@@ -55,4 +55,14 @@ class LTCPayment extends Payment
     {
         return $this->getWalletAmount();
     }
+
+    /**
+     * Used to convert Shifter/Exchange output values into the value our Wallet understands
+     * @param $amount
+     * @return mixed
+     */
+    public static function toBase($amount)
+    {
+        return $amount;
+    }
 }
