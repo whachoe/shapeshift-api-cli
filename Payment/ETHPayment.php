@@ -50,11 +50,11 @@ class ETHPayment extends Payment
         $output = parent::getWalletAmount();
         try {
             $data = json_decode($output, true);
-            if ($data['confirmed']) {
-                $balance = $data['confirmed'];
+            if (isset($data['result'])) {
+                $balance = $data['result'];
             }
         } catch (\Exception $e) {
-            echo "BTC: Error getting wallet amount";
+            echo "ETH: Error getting wallet amount";
             exit();
         }
 

@@ -44,7 +44,7 @@ class LTCPayment extends Payment
                 $balance = $data['confirmed'];
             }
         } catch (\Exception $e) {
-            echo "BTC: Error getting wallet amount";
+            echo "LTC: Error getting wallet amount";
             exit();
         }
 
