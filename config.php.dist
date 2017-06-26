@@ -1,6 +1,7 @@
 <?php
 define('LOGFILE', "/var/log/shapeshift.log");
-define("MONERO_BASE_CONVERSION", 1000000000000.0);
+define('CHANGELLY_API_KEY', 'your-changelly-api-key');
+define('CHANGELLY_SECRET_KEY', 'your-changelly-secret-key');
 
 $wallets = [
     'btc' => [

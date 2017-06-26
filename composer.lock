@@ -1,0 +1,129 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "c66b6fd14c9499f8a81bb23c8067df04",
+    "packages": [
+        {
+            "name": "datto/json-rpc",
+            "version": "4.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/datto/php-json-rpc.git",
+                "reference": "597e946ab364c52ad114e717d3b482367c847f8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/datto/php-json-rpc/zipball/597e946ab364c52ad114e717d3b482367c847f8d",
+                "reference": "597e946ab364c52ad114e717d3b482367c847f8d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Datto\\JsonRpc\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Spencer Mortensen",
+                    "email": "smortensen@datto.com",
+                    "homepage": "http://spencermortensen.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Fully unit-tested JSON-RPC 2.0 for PHP",
+            "homepage": "http://datto.com",
+            "keywords": [
+                "json",
+                "json-rpc",
+                "jsonrpc",
+                "php",
+                "php-json-rpc",
+                "rpc"
+            ],
+            "time": "2017-06-08T21:21:53+00:00"
+        },
+        {
+            "name": "datto/json-rpc-http",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whachoe/php-json-rpc-http.git",
+                "reference": "c8c7c0a3f28918a7d4295b8ddf8998dd8c093d0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whachoe/php-json-rpc-http/zipball/c8c7c0a3f28918a7d4295b8ddf8998dd8c093d0e",
+                "reference": "c8c7c0a3f28918a7d4295b8ddf8998dd8c093d0e",
+                "shasum": ""
+            },
+            "require": {
+                "datto/json-rpc": "~4.0",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Datto\\JsonRpc\\Http\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Datto\\JsonRpc\\Http\\Examples\\Authenticated\\": "examples/authenticated/src",
+                    "Datto\\JsonRpc\\Http\\Examples\\Simple\\": "examples/simple/src"
+                }
+            },
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Spencer Mortensen",
+                    "email": "smortensen@datto.com",
+                    "homepage": "http://spencermortensen.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "HTTP client and server for JSON-RPC 2.0",
+            "homepage": "http://datto.com",
+            "keywords": [
+                "client",
+                "http",
+                "json",
+                "json-rpc",
+                "jsonrpc",
+                "php",
+                "php-json-rpc",
+                "rpc",
+                "server"
+            ],
+            "support": {
+                "source": "https://github.com/whachoe/php-json-rpc-http/tree/master"
+            },
+            "time": "2017-06-25 22:26:48"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "datto/json-rpc-http": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

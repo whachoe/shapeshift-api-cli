@@ -14,5 +14,13 @@
             "": "./"
         }
     },
-    "require": {}
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/whachoe/php-json-rpc-http"
+        }
+    ],
+    "require": {
+        "datto/json-rpc-http": "dev-master"
+    }
 }

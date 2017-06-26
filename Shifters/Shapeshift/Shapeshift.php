@@ -1,5 +1,5 @@
 <?php
-namespace Shapeshift;
+namespace Shifters\Shapeshift;
 
 use Payment\Payment;
 
