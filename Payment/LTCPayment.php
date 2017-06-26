@@ -19,6 +19,8 @@ class LTCPayment extends Payment
         }
 
         $this->toAddress = $data['deposit'];
+
+        return true;
     }
 
     public function send()

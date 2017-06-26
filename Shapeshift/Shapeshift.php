@@ -119,7 +119,6 @@ class Shapeshift {
 
             $paymentProcessor = Payment::factory($from);
             $paymentProcessor->amount = $amountToShift;
-            var_dump($data);
             if ($paymentProcessor->parseShapeshiftResponse($data)) {
                 return $paymentProcessor->send();
             } else {
