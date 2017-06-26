@@ -22,7 +22,7 @@ if (!$wallet) {
     exit();
 }
 
-$paymentProcessor = Payment\Payment::factory($from);
+$paymentProcessor = Payment\Payment::factory($wallet);
 $paymentProcessor->toAddress = $options['to'];
 $paymentProcessor->amount = $options['amount'];
 if ($paymentProcessor instanceof \Payment\XMRPayment) {

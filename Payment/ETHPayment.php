@@ -22,7 +22,7 @@ class ETHPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            throw new Exception("ETH send: Missing parameters");
+            throw new \Exception("ETH send: Missing parameters");
         }
 
         $str_replace_from = [':address', ':amount', ':password', ':fromAddress'];
