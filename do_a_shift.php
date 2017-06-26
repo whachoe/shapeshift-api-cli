@@ -12,8 +12,9 @@ $shifter = new \Shapeshift\Shapeshift();
 
 // Get commandline options
 $options = parseArgs($argv);
-if (!isset($options['input']) || !isset($options['output'])) {
+if (isset($options['help']) || !isset($options['input']) || !isset($options['output'])) {
     echo "Syntax: {$argv[0]} --input=btc --output=eth";
+    echo "    This will try to shift as much coins as possible from the 'input' to the 'output' wallet.";
     exit();
 }
 

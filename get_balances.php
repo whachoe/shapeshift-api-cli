@@ -11,6 +11,11 @@ set_time_limit(0);
 
 $options = parseArgs($argv);
 
+if ($options['--help']) {
+    echo "Syntax: {$argv[0]} [--print-header]\n";
+    exit();
+}
+
 // Get conversion rates
 $from = array_keys($wallets);
 $to = array_keys($wallets);

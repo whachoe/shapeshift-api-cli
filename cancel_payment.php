@@ -7,7 +7,7 @@ set_time_limit(0);
 
 // Get commandline options
 $options = parseArgs($argv);
-if (!$options[0]) {
+if (!$options[0] || $options['--help']) {
     echo "Syntax: {$argv[0]} address";
     exit();
 }
