@@ -47,7 +47,8 @@ if ($input == $output) {
 
 // Check if we can shift for this pair
 if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
-    echo "Input or output is USD . Please follow up manually\n";
+    echo "You're trying to shift an unsupported currency. Please follow up manually\n";
+    echo "Possible currencies: ".implode(",", $possibleSwaps);
     exit();
 }
 
