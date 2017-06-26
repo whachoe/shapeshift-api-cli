@@ -11,7 +11,7 @@ set_time_limit(0);
 
 $options = parseArgs($argv);
 
-if ($options['--help']) {
+if (isset($options['--help'])) {
     echo "Syntax: {$argv[0]} [--print-header]\n";
     exit();
 }
