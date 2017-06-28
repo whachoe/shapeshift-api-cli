@@ -95,25 +95,26 @@ class Shapeshift {
         if ($amountToShift > 0.0) {
             // First talk to shapeshift
             $payload = "{\"withdrawal\":\"{$to['address']}\", \"pair\":\"$pair\", \"returnAddress\":\"{$from['address']}\"}";
-
             $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '$payload' {$this->baseUrl}/shift";
+            logger("Shapeshift call: ".$command);
             $output = `$command`;
+            logger("Shapeshift answer: $output");
+
             try {
-                echo "Shapeshift answer: $output\n";
                 $data = json_decode($output, true);
             } catch (\Exception $e) {
-                echo "Something went wrong while calling Shapeshift: {$e->getMessage()}\n";
+                logger("Something went wrong while calling Shapeshift: {$e->getMessage()}");
                 return false;
             }
 
             if (isset($data['error'])) {
-                echo "Shapeshift error: {$data['error']}. Exiting\n";
+                logger("Shapeshift error: {$data['error']}. Exiting");
                 return false;
             }
 
             // Double check deposit type: Should match our from-wallet
             if (strtolower($data['depositType']) != $from['currency']) {
-                echo "Wrong deposittype: Shapeshift: {$data['depositType']}. We: {$from['currency']}";
+                logger("Wrong deposittype: Shapeshift: {$data['depositType']}. We: {$from['currency']}");
                 return false;
             }
 
@@ -122,11 +123,11 @@ class Shapeshift {
             if ($paymentProcessor->parseShapeshiftResponse($data)) {
                 return $paymentProcessor->send();
             } else {
-                echo "ETH: Error in parsing shapeshift message";
+                logger("ETH: Error in parsing shapeshift message");
                 return false;
             }
         } else {
-            echo "Amount to shift is too low: ".strval($amountToShift);
+            logger("Amount to shift is too low: ".strval($amountToShift));
             return false;
         }
 
@@ -152,7 +153,9 @@ class Shapeshift {
     public function cancelPending($address)
     {
         $command = "curl -s -X POST -H \"Content-Type: application/json\" -d '{\"address\":\"{$address}\"}' {$this->baseUrl}/cancelpending";
+        logger("Shapeshift cancelPending: $command");
         $response = `$command`;
+        logger("Shapeshift cancelPending response: $response");
 
         $data = $this->catchError($response);
         if ($data)
@@ -165,12 +168,12 @@ class Shapeshift {
         try {
             $data = json_decode($response, true);
         } catch (\Exception $e) {
-            echo "Error getting MarketInfo: {$e->getMessage()}";
+            logger("Error getting MarketInfo: {$e->getMessage()}");
             return false;
         }
 
         if (isset($data['error'])) {
-            echo "Shapeshift error: {$data['error']}. Exiting\n";
+            logger("Shapeshift error: {$data['error']}. Exiting\n");
             return false;
         }
 

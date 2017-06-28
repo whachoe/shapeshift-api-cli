@@ -26,7 +26,7 @@ abstract class Payment
 
     protected function executeSend($command)
     {
-        echo $command . "\n";
+        logger("Payment Command: $command");
 
         // Uncomment when testing is done:
         // $response = `$command`;

@@ -12,6 +12,7 @@ class LTCPayment extends Payment
                 $data = json_decode($response, true);
 
             } catch (\Exception $e) {
+                logger("LTCPayment: Error parsing shapeshift message: ".$e->getMessage());
                 return false;
             }
         } else {
@@ -26,7 +27,7 @@ class LTCPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            echo "LTC: Missing parameters. We need 'toAddress' and 'amount";
+            logger("LTCPayment: Missing parameters. We need 'toAddress' and 'amount");
             return false;
         }
 
@@ -47,7 +48,7 @@ class LTCPayment extends Payment
                 $balance = $data['confirmed'];
             }
         } catch (\Exception $e) {
-            echo "LTC: Error getting wallet amount";
+            logger("LTCPayment: Error getting wallet amount");
             exit();
         }
 

@@ -22,7 +22,7 @@ $input = strtolower($options['input']);
 $output = strtolower($options['output']);
 
 if (strlen($input) < 3 || strlen($output) < 3) {
-    echo "Specify input and output currency";
+    logger("Specify input and output currency");
     exit();
 }
 
@@ -36,23 +36,22 @@ if ($output == 'usd') {
 }
 
 if (!$shifter->checkAvailability($input, $output)) {
-    echo "$input or $output is not available on Shapeshift. Exiting\n";
+    logger("$input or $output is not available on Shapeshift. Exiting.");
     exit();
 }
 
 if ($input == $output) {
-    echo "Can't switch between the same currencies ($input). Exiting\n";
+    logger("Can't switch between the same currencies ($input). Exiting");
     exit();
 }
 
 // Check if we can shift for this pair
 if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
-    echo "You're trying to shift an unsupported currency. Please follow up manually\n";
-    echo "Possible currencies: ".implode(",", $possibleSwaps);
+    logger("You're trying to shift an unsupported currency. Please follow up manually\nPossible currencies: ".implode(",", $possibleSwaps));
     exit();
 }
 
-echo "Working on shifting: $input to $output\n";
+logger("Working on shifting: $input to $output");
 
 $paymentProcessor = \Payment\Payment::factory($wallets[$input]);
 
@@ -63,7 +62,7 @@ $pair = "{$input}_{$output}";
 $marketInfo = $shifter->getMarketInfo($pair);
 
 if (!$marketInfo) {
-    echo "No marketinfo found. Exiting";
+    logger("No marketinfo found. Exiting.");
     exit(1);
 }
 
@@ -73,12 +72,12 @@ $min = $paymentProcessor->toBase($marketInfo['minimum']);
 $minerFee = $paymentProcessor->toBase($marketInfo['minerFee']);
 
 if (!$rate) {
-    echo "No rate for $pair found. Exiting\n";
+    logger("No rate for $pair found. Exiting");
     exit(1);
 }
 
 if (!$limit || !$min) {
-    echo "No valid limit ($limit) or minimum ($min) found. Exiting\n";
+    logger("No valid limit ($limit) or minimum ($min) found. Exiting.");
     exit(1);
 }
 
@@ -87,7 +86,7 @@ $walletAmount = $paymentProcessor->getWalletAmount();
 
 // Make sure we have at least minimum to work with
 if ($walletAmount < $min) {
-    echo "Not enough in wallet. Min: $min\n";
+    logger("Not enough in wallet. Min: $min");
     exit();
 }
 
@@ -97,10 +96,10 @@ $amountToShift = min($walletAmount*90/100, $limit);
 // Ask for shift
 if ($amountToShift > 0) {
     if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
-        echo "Failed to shift: $input -> $output (".strval($amountToShift). "). Balance of wallet: $walletAmount\n";
+        logger("Failed to shift: $input -> $output (".strval($amountToShift). "). Balance of wallet: $walletAmount");
         exit();
     }
 } else {
-    echo "Error: Amount was 0 or negative:".strval($amountToShift)."\n";
+    logger("Error: Amount was 0 or negative:".strval($amountToShift));
     exit();
 }

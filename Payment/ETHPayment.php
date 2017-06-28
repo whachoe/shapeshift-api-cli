@@ -12,7 +12,7 @@ class ETHPayment extends Payment
                 $data = json_decode($response, true);
 
             } catch (\Exception $e) {
-                echo "Error parsing shapeshift message: ".$e->getMessage();
+                logger("EthPayment: Error parsing shapeshift message: ".$e->getMessage());
                 return false;
             }
         } else {
@@ -27,7 +27,7 @@ class ETHPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            echo "ETH: Missing parameters. We need 'toAddress' and 'amount";
+            logger("ETHPayment: Missing parameters. We need 'toAddress' and 'amount");
             return false;
         }
 
@@ -59,7 +59,7 @@ class ETHPayment extends Payment
                 $balance = hexdec(str_replace("0x", "", $data['result']));
             }
         } catch (\Exception $e) {
-            echo "ETH: Error getting wallet amount";
+            logger("ETHPayment: Error getting wallet amount");
             exit();
         }
 

@@ -3,7 +3,7 @@ namespace Payment;
 
 class XMRPayment extends Payment
 {
-    const MONERO_BASE_CONVERSION = 1000000000000.0;
+    const MONERO_BASE_CONVERSION = 1000000000000;
     public $paymentID;
 
     public function parseShapeshiftResponse($response)
@@ -12,6 +12,7 @@ class XMRPayment extends Payment
             try {
                 $data = json_decode($response, true);
             } catch (\Exception $e) {
+                logger("XMRPayment: Error parsing shapeshift message: ".$e->getMessage());
                 return false;
             }
         } else {
@@ -26,7 +27,7 @@ class XMRPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->paymentID || !$this->amount) {
-            echo "XMR: Missing parameters. We need 'toAddress' and 'amount";
+            logger("XMRPayment: Missing parameters. We need 'toAddress' and 'amount");
             return false;
 
         }
@@ -53,7 +54,7 @@ class XMRPayment extends Payment
                 $balance = $data['result']['balance'];
             }
         } catch (\Exception $e) {
-            echo "XMR: Error getting wallet amount";
+            logger("XMRPayment: Error getting wallet amount");
             exit();
         }
 

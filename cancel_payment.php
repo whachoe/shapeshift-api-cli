@@ -15,7 +15,7 @@ if (!$options[0] || $options['--help']) {
 $shifter = new \Shapeshift\Shapeshift();
 
 if ($shifter->cancelPending($address)) {
-    echo "Order cancelled";
+    logger("Order cancelled");
 } else {
-    echo "Order not cancelled";
+    logger("Order not cancelled");
 }

@@ -11,6 +11,7 @@ class BTCPayment extends Payment
             try {
                 $data = json_decode($response, true);
             } catch (\Exception $e) {
+                logger("BTCPayment: Error parsing shapeshift message: ".$e->getMessage());
                 return false;
             }
         } else {
@@ -24,7 +25,7 @@ class BTCPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            echo "BTC: Missing parameters. We need 'toAddress' and 'amount";
+            logger("BTCPayment: Missing parameters. We need 'toAddress' and 'amount");
             return false;
         }
 
@@ -45,7 +46,7 @@ class BTCPayment extends Payment
                 $balance = $data['confirmed'];
             }
         } catch (\Exception $e) {
-            echo "BTC: Error getting wallet amount";
+            logger("BTCPayment: Error getting wallet amount");
             exit();
         }
 

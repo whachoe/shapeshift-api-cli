@@ -9,6 +9,7 @@ class ZECPayment extends Payment
             try {
                 $data = json_decode($response, true);
             } catch (\Exception $e) {
+                logger("ZECPayment: Error parsing shapeshift message: ".$e->getMessage());
                 return false;
             }
         }  else {
@@ -23,7 +24,7 @@ class ZECPayment extends Payment
     public function send()
     {
         if (!$this->toAddress || !$this->amount) {
-            echo "ZEC: Missing parameters. We need 'toAddress' and 'amount";
+            logger("ZECPayment: Missing parameters. We need 'toAddress' and 'amount");
             return false;
 
         }
