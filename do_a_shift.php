@@ -98,6 +98,8 @@ if ($amountToShift > 0) {
     if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
         logger("Failed to shift: $input -> $output (".strval($amountToShift). "). Balance of wallet: $walletAmount");
         exit();
+    } else {
+        write_transaction_log($wallets[$input], $wallets[$output], $amountToShift);
     }
 } else {
     logger("Error: Amount was 0 or negative:".strval($amountToShift));

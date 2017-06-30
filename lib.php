@@ -61,9 +61,17 @@ function parseArgs($argv)
 
 function logger($message)
 {
-    $logline = date("c")."\t".$message;
+    $logline = date("c")."\t".$message."\n";
     file_put_contents(LOGFILE, $logline, FILE_APPEND);
 
     // Also print on screen
     echo $logline."\n";
+}
+
+function write_transaction_log($inputWallet, $outputWallet, $amountToShift)
+{
+    $amountToShiftOutput = $amountToShift*getExchangeRate($inputWallet['currency'], $outputWallet['currency']);
+    $data = [date("c"), $inputWallet['currency'], $amountToShift, $outputWallet['currency'], $amountToShiftOutput];
+    $line = implode(';', $data)."\n";
+    file_put_contents(TRANSACTION_CSV_FILE, $line, FILE_APPEND);
 }

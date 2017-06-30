@@ -30,7 +30,7 @@ abstract class Payment
 
         // Uncomment when testing is done:
         // $response = `$command`;
-        // echo $response."\n";
+        // logger("Payment response: $response");
 
         return true;
     }
