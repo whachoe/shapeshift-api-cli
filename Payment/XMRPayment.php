@@ -55,7 +55,7 @@ class XMRPayment extends Payment
 
     public function getWalletAmountFriendly()
     {
-        return $this->getWalletAmount() / self::MONERO_BASE_CONVERSION;
+        return $this->getWalletAmount();
     }
 
     /**
