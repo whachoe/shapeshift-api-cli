@@ -33,9 +33,9 @@ class XMRPayment extends Payment
         }
 
         // Convert amount if it's still in decimal notation
-        if (strpos($this->amount, '.')) {
-            $this->amount = intval($this->amount * self::MONERO_BASE_CONVERSION);
-        }
+//        if (strpos($this->amount, '.')) {
+//            $this->amount = intval($this->amount * self::MONERO_BASE_CONVERSION);
+//        }
 
         $str_replace_from = [':address', ':amount', ':password', ':fromAddress', ':user', ':paymentId'];
         $str_replace_to = [$this->toAddress, $this->amount, $this->walletConfig['password'], $this->fromAddress, $this->walletConfig['user'], $this->paymentID];
