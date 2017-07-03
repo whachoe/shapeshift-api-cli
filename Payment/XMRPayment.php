@@ -46,18 +46,10 @@ class XMRPayment extends Payment
 
     public function getWalletAmount()
     {
-        $balance = 0;
         $output = parent::getWalletAmount();
-        try {
-            $data = json_decode($output, true);
-            if (isset($data['result']) && isset($data['result']['balance'])) {
-                $balance = $data['result']['balance'];
-            }
-        } catch (\Exception $e) {
-            logger("XMRPayment: Error getting wallet amount");
-            exit();
-        }
-
+        $matches = [];
+        preg_match("Balance: (.*),", $output, $matches);
+        $balance = $matches[1];
         return $balance;
     }
 
