@@ -65,6 +65,6 @@ class XMRPayment extends Payment
      */
     public static function toBase($amount)
     {
-        return $amount * self::MONERO_BASE_CONVERSION;
+        return $amount;
     }
 }
