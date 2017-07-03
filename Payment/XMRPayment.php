@@ -48,8 +48,7 @@ class XMRPayment extends Payment
     {
         $output = parent::getWalletAmount();
         $matches = [];
-        preg_match("/Balance: (.*),/g", $output, $matches);
-        var_dump($matches);
+        preg_match('/Balance: (.*),/', $output, $matches);
         $balance = $matches[1];
         return $balance;
     }
