@@ -22,7 +22,7 @@ class TwitterListener extends OauthPhirehose
          */
         $data = json_decode($status, true);
         if (is_array($data) && isset($data['user']['screen_name'])) {
-            if (preg_match('/vicky.*bot/i', $data['user']['screen_name'])) {
+            if (preg_match('/vicki.*bot/i', $data['user']['screen_name'])) {
                 print $data['user']['screen_name'] . ': ' . urldecode($data['text']) . "\n";
             }
         }
