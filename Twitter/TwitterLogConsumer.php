@@ -28,9 +28,6 @@ class TwitterLogConsumer {
 
     public function process($msg)
     {
-        echo $msg;
-
-
         if ($msg['text']) {
             $text = urldecode($msg['text']);
             $input = ''; $output = '';
