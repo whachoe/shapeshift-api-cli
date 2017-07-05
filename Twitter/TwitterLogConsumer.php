@@ -63,3 +63,4 @@ class TwitterLogConsumer {
 }
 
 $consumer = new TwitterLogConsumer();
+$consumer->listen();
