@@ -15,6 +15,7 @@
         }
     },
     "require": {
-        "fennb/phirehose": "^1.0"
+        "fennb/phirehose": "^1.0",
+        "pda/pheanstalk": "^3.1"
     }
 }

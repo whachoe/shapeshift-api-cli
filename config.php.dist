@@ -1,7 +1,7 @@
 <?php
-define('LOGFILE', __DIRNAME__."/logs/shapeshift.log");
-define('BALANCE_CSV_FILE', __DIRNAME__."/logs/balances.csv");
-define('TRANSACTION_CSV_FILE', __DIRNAME__."/logs/transactions.log");
+define('LOGFILE', __DIR__."/logs/shapeshift.log");
+define('BALANCE_CSV_FILE', __DIR__."/logs/balances.csv");
+define('TRANSACTION_CSV_FILE', __DIR__."/logs/transactions.log");
 
 // These are the application key and secret
 // You can create an application, and then get this info, from https://dev.twitter.com/apps
@@ -14,7 +14,7 @@ define('TWITTER_CONSUMER_SECRET', '');
 // section for your app.
 define('TWITTER_OAUTH_TOKEN', '');
 define('TWITTER_OAUTH_SECRET', '');
-define('TWITTER_LOG_FILE', __DIRNAME.'/logs/twitter.log');
+define('TWITTER_LOG_FILE', __DIR__.'/logs/twitter.log');
 
 // Possible shifter api's
 define('SHIFTER_CHANGELLY', 'changelly'); // this one doesn't work yet
