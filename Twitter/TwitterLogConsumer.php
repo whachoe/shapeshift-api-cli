@@ -6,7 +6,7 @@ include_once "lib.php";
 use Pheanstalk\Pheanstalk;
 
 class TwitterLogConsumer {
-    var $pairs = ['BTCUSD', 'ETHBTC', 'XMRBTC', 'ZECUSD'];
+    var $pairs = ['BTCUSD', 'ETHBTC', 'XMRBTC', 'ZECUSD', 'LTCBTC'];
 
     public function __construct()
     {
