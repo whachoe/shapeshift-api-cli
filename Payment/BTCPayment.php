@@ -29,8 +29,8 @@ class BTCPayment extends Payment
             return false;
         }
 
-        $str_replace_from = [':address', ':amount'];
-        $str_replace_to = [$this->toAddress, $this->amount];
+        $str_replace_from = [':address', ':amount', ':password'];
+        $str_replace_to = [$this->toAddress, $this->amount, $this->walletConfig['password']];
         $command = str_replace($str_replace_from, $str_replace_to, $this->transferCommand);
 
         return $this->executeSend($command);
