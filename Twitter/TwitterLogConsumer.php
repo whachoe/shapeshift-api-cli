@@ -53,7 +53,7 @@ class TwitterLogConsumer {
             if ($input && $output) {
                 $command = "php do_a_shift.php --input={$input} --output=$output";
                 echo "Twitter consumer running: ".$command."\n";
-                // `$command`;
+                `$command`;
             }
         }
     }

@@ -30,7 +30,7 @@ class ZECPayment extends Payment
         }
 
         $str_replace_from = [':address', ':amount', ':fromAddress'];
-        $str_replace_to = [$this->toAddress, $this->amount, $this->fromAddress];
+        $str_replace_to = [$this->toAddress, number_format($this->amount, 2), $this->fromAddress];
         $command = str_replace($str_replace_from, $str_replace_to, $this->transferCommand);
 
         return $this->executeSend($command);

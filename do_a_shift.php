@@ -76,7 +76,7 @@ if (!$rate) {
     exit(1);
 }
 
-if (!$limit || !$min) {
+if (! "$limit" || ! "$min") {
     logger("No valid limit ($limit) or minimum ($min) found. Exiting.");
     exit(1);
 }
