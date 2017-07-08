@@ -121,6 +121,7 @@ class Shapeshift {
             $paymentProcessor = Payment::factory($from);
             $paymentProcessor->amount = $amountToShift;
             if ($paymentProcessor->parseShapeshiftResponse($data)) {
+                sleep(2); // sleep a bit to be safe we can send the transaction
                 return $paymentProcessor->send();
             } else {
                 logger("ETH: Error in parsing shapeshift message");
