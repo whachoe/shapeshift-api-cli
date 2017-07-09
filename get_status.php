@@ -15,4 +15,5 @@ if (isset($options['help']) || !$options['address']) {
 
 $shifter = new \Shapeshift\Shapeshift();
 logger("get_status: {$options['address']}");
-logger($shifter->getStatusOfDeposit($options['address']));
+$response = $shifter->getStatusOfDeposit($options['address']);
+var_dump($response);

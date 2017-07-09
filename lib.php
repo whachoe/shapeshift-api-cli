@@ -59,10 +59,10 @@ function parseArgs($argv)
     return $o;
 }
 
-function logger($message)
+function logger($message, $logfile=LOGFILE)
 {
     $logline = date("c")."\t".$message."\n";
-    file_put_contents(LOGFILE, $logline, FILE_APPEND);
+    file_put_contents($logfile, $logline, FILE_APPEND);
 
     // Also print on screen
     echo $logline."\n";

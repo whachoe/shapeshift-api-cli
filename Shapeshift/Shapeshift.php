@@ -2,6 +2,7 @@
 namespace Shapeshift;
 
 use Payment\Payment;
+use Pheanstalk\Pheanstalk;
 
 class Shapeshift {
     private $baseUrl="https://shapeshift.io";
@@ -81,6 +82,14 @@ class Shapeshift {
         return $data['isvalid'];
     }
 
+    public function orderInfo($orderId)
+    {
+        $response = file_get_contents("{$this->baseUrl}/orderInfo/$orderId");
+        $data = $this->catchError($response);
+
+        return $data;
+    }
+
     /**
      * Call shapeshift and send funds
      *
@@ -122,6 +131,12 @@ class Shapeshift {
             $paymentProcessor->amount = $amountToShift;
             if ($paymentProcessor->parseShapeshiftResponse($data)) {
                 sleep(2); // sleep a bit to be safe we can send the transaction
+
+                // Schedule job to check order-status
+                $queueclient = new Pheanstalk('127.0.0.1');
+                $queueclient->putInTube('shapeshift_orderstatus', $output, Pheanstalk::DEFAULT_PRIORITY, 900); // wait 15 minutes before checking
+
+                // Do the payment
                 return $paymentProcessor->send();
             } else {
                 logger("ETH: Error in parsing shapeshift message");
@@ -169,7 +184,7 @@ class Shapeshift {
         try {
             $data = json_decode($response, true);
         } catch (\Exception $e) {
-            logger("Error getting MarketInfo: {$e->getMessage()}");
+            logger("Error parsing Shapeshift response: {$e->getMessage()}");
             return false;
         }
 

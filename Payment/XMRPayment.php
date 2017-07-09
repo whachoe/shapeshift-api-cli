@@ -32,7 +32,7 @@ class XMRPayment extends Payment
 
         }
 
-        // Convert amount if it's still in decimal notation
+        // Convert amount if it's still in decimal notation: needed when using json-rpc, not when using wallet-cli
 //        if (strpos($this->amount, '.')) {
 //            $this->amount = intval($this->amount * self::MONERO_BASE_CONVERSION);
 //        }

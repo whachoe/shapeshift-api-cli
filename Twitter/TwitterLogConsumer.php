@@ -15,7 +15,7 @@ class TwitterLogConsumer {
 
     public function listen()
     {
-        $this->client->watch('vickiqueue');
+        $this->client->watch('vickiqueue')->ignore('default');
 
         while ($job = $this->client->reserve()) { // Do this forever... so it's always listening.
             $message = json_decode($job->getData(), true); // Decode the message
