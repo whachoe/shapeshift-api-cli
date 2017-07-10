@@ -6,7 +6,7 @@ include_once "lib.php";
 use Pheanstalk\Pheanstalk;
 
 class TwitterLogConsumer {
-    var $pairs = ['BTCUSD', 'ETHBTC', 'XMRBTC', 'ZECUSD', 'LTCBTC'];
+    var $pairs = ['BTCUSD', 'ETHBTC', 'XMRBTC', 'ZECUSD', 'LTCBTC', 'ETHUSD'];
 
     public function __construct()
     {
@@ -15,7 +15,7 @@ class TwitterLogConsumer {
 
     public function listen()
     {
-        $this->client->watch('vickiqueue')->ignore('default');
+        $this->client->watch('vickiqueue');
 
         while ($job = $this->client->reserve()) { // Do this forever... so it's always listening.
             $message = json_decode($job->getData(), true); // Decode the message
