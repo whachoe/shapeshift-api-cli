@@ -13,7 +13,7 @@ class ShapeshiftOrderstatusConsumer {
 
     public function listen()
     {
-        $this->client->watch('shapeshift_orderstatus')->ignore('default');
+        $this->client->watch('shapeshift_orderstatus');
 
         // Do this forever... so it's always listening.
         while ($job = $this->client->reserve()) {
@@ -28,7 +28,7 @@ class ShapeshiftOrderstatusConsumer {
                     $this->client->bury($job);
                 } else {
                     $message['queuetimes'] = isset($message['queuetimes']) ? $message['queuetimes'] + 1 : 1;
-                    $this->client->putInTube('shapeshift_orderstatus', $message, Pheanstalk::DEFAULT_PRIORITY, 900); // wait 15 minutes before checking
+                    $this->client->putInTube('shapeshift_orderstatus', json_encode($message), Pheanstalk::DEFAULT_PRIORITY, 900); // wait 15 minutes before checking
                     $this->client->delete($job);
                 }
             }
