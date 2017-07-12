@@ -120,6 +120,37 @@ class Changelly
         return $data['result'];
     }
 
+    public function getTransactions($currency=null, $address=null, $extraId=null)
+    {
+        $dataToSend = [
+            'limit' => 10,
+            'offset' => 0,
+        ];
+        if ($currency)
+            $dataToSend['currency'] = $currency;
+        if ($address)
+            $dataToSend['address'] = $address;
+        if ($extraId)
+            $dataToSend['extraId'] = $extraId;
+
+        $this->jsonrpcClient->query($this->getId(), 'getTransactions', $dataToSend);
+        $response = $this->jsonrpcClient->send();
+
+        $data = $this->catchError($response);
+
+        return $data['result'];
+    }
+
+    public function getStatus($transactionId)
+    {
+        $this->jsonrpcClient->query($this->getId(), 'getStatus', ['id' => $transactionId]);
+        $response = $this->jsonrpcClient->send();
+
+        $data = $this->catchError($response);
+
+        return $data['result'];
+    }
+
     private function getId()
     {
         $string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -141,7 +172,7 @@ class Changelly
     private function catchError($response)
     {
         if (isset($response['error'])) {
-            logger("Changelly error: {$response['error']}. Exiting\n");
+            logger("Changelly error: ".var_export($response, true). "Exiting\n");
             return false;
         }
 
