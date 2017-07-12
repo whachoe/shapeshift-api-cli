@@ -42,9 +42,11 @@ class Changelly
         $data = $this->catchError($response);
         if ($data)
             return (in_array(strtolower($input), $data['result']) && in_array(strtolower($output), $data['result']));
+
+        return false;
     }
 
-    public function checkAmount($paymentProcessor, $pair)
+    public function checkAmount(Payment $paymentProcessor, $pair)
     {
         $p = explode('_', $pair);
         $min = $this->getMinAmount($p[0], $p[1]);
@@ -97,7 +99,12 @@ class Changelly
                 logger("Changelly: Error in parsing changelly response");
                 return false;
             }
+        } else {
+            logger("Amount to shift is too low: ".strval($amountToShift));
+            return false;
         }
+
+        return false;
     }
 
     public function getExchangeAmount($input, $output, $amount)
