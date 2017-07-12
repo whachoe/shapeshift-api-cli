@@ -1,5 +1,6 @@
 <?php
 require_once('Payment/Payment.php');
+include_once('config.php');
 
 function getExchangeRate($from, $to)
 {
