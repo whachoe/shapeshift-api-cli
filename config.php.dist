@@ -1,47 +1,74 @@
 <?php
-define('LOGFILE', "/var/log/shapeshift.log");
+define('LOGFILE', __DIR__."/logs/shapeshift.log");
+define('BALANCE_CSV_FILE', __DIR__."/logs/balances.csv");
+define('TRANSACTION_CSV_FILE', __DIR__."/logs/transactions.log");
+
+// Your changelly api credentials. Get them at https://changelly.com/developers
 define('CHANGELLY_API_KEY', 'your-changelly-api-key');
 define('CHANGELLY_SECRET_KEY', 'your-changelly-secret-key');
+
+// These are the application key and secret
+// You can create an application, and then get this info, from https://dev.twitter.com/apps
+// (They are under OAuth Settings, called "Consumer key" and "Consumer secret")
+define('TWITTER_CONSUMER_KEY', '');
+define('TWITTER_CONSUMER_SECRET', '');
+
+// These are the user's token and secret
+// You can get this from https://dev.twitter.com/apps, under the "Your access token"
+// section for your app.
+define('TWITTER_OAUTH_TOKEN', '');
+define('TWITTER_OAUTH_SECRET', '');
+define('TWITTER_LOG_FILE', __DIR__.'/logs/twitter.log');
+
+// Possible shifter api's
+define('SHIFTER_CHANGELLY', 'changelly'); // this one doesn't work yet
+define('SHIFTER_SHAPESHIFT', 'shapeshift');
+
+// Choose 1 of the choices above
+define('SHIFTER', SHIFTER_SHAPESHIFT);
 
 $wallets = [
     'btc' => [
         'currency' => 'btc',
-        'address' => '<your public address>',
-        'user' => '', // can be left empty for this currency
-        'password' => '<your wallet password>',
-        'walletBalanceCommand' => 'electrum daemon load_wallet; electrum getbalance',
-        'walletTransferCommand' => 'electrum payto -f :minerFee :address :amount',
+        'address' => 'your-wallet-public-address',
+        'user' => '',
+        'password' => 'wallet-password',
+        'walletBalanceCommand' => 'electrum daemon load_wallet>/dev/null; electrum getbalance',
+        'walletTransferCommand' => 'electrum -W :password payto  :address :amount | electrum broadcast -',
     ],
     'eth' => [
         'currency' => 'eth',
-        'address' => '<your public address>',
-        'user' => '', // can be left empty for this currency
-        'password' => '<your wallet password>',
-        'walletBalanceCommand' => 'curl --data \'{"method":"eth_getBalance","params":[":fromAddress"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
-        'walletTransferCommand' => 'curl --data \'{"method":"personal_sendTransaction","params":[{"from":":fromAddress","to":":address","value":":amount"},":password"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
+        'address' => 'your-wallet-public-address',
+        'user' => '',
+        'password' => 'wallet-password',
+        'walletBalanceCommand' => 'curl -s -d \'{"method":"eth_getBalance","params":[":fromAddress"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
+        'walletTransferCommand' => 'curl -s -d \'{"method":"personal_sendTransaction","params":[{"from":":fromAddress","to":":address","value":":amount"},":password"],"id":1,"jsonrpc":"2.0"}\' -H "Content-Type: application/json" -X POST localhost:8545',
     ],
     'xmr' => [
         'currency' => 'xmr',
-        'address' => '<your public address>',
-        'user' => '<your json-rpc-user>',
-        'password' => '<your json-rpc-password>',
-        'walletBalanceCommand' => "curl -X POST http://127.0.0.1:18082/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"getbalance\"}' -H 'Content-Type: application/json' --digest -u cjpa::password",
-        'walletTransferCommand' => "curl -X POST http://127.0.0.1:18082/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"destinations\":[{\"amount\"::amount,\"address\":\":address\"}]}}' -H 'Content-Type: application/json' --digest -u cjpa::password",
+        'address' => 'your-wallet-public-address',
+        'user' => 'wallet-user',
+        'password' => 'wallet-password',
+//        'walletBalanceCommand' => "curl -s -X POST http://127.0.0.1:18082/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"getbalance\"}' -H 'Content-Type: application/json' --digest -u :user::password",
+//        'walletTransferCommand' => "curl -s -X POST http://127.0.0.1:18082/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"destinations\":[{\"amount\"::amount,\"address\":\":address\",\"payment_id\":\":paymentId\"}]}}' -H 'Content-Type: application/json' --digest -u :user::password",
+
+        'walletBalanceCommand' => "/home/cjpa/monero/monero-v0.10.3.1/monero-wallet-cli --wallet-file /home/cjpa/monero/monero-v0.10.3.1/cjpa-monero-wallet --password :password getbalance",
+        'walletTransferCommand' => "/home/cjpa/monero/monero-v0.10.3.1/monero-wallet-cli --wallet-file /home/cjpa/monero/monero-v0.10.3.1/cjpa-monero-wallet --password :password transfer 3 :address :amount :paymentId",
     ],
     'zec' => [
         'currency' => 'zec',
-        'address' => '<your public address>',
-        'user' => '', // can be left empty for this currency
-        'password' => '', // can be left empty for this currency
+        'user' => '',
+        'password' => '',
+        'address' => 'your-wallet-public-address',
         'walletBalanceCommand' => 'zcash-cli getbalance',
         'walletTransferCommand' => 'zcash-cli z_sendmany ":fromAddress" "[{\"amount\": :amount, \"address\": \":address\"}]"',
     ],
     'ltc' => [
         'currency' => 'ltc',
-        'address' => '<your public address>',
-        'user' => '', // can be left empty for this currency
-        'password' => '<your wallet password>',
+        'address' => 'your-wallet-public-address',
+        'user' => '',
+        'password' => 'wallet-password',
         'walletBalanceCommand' => 'electrum-ltc getbalance',
-        'walletTransferCommand' => 'electrum-ltc payto -f :minerFee :address :amount',
+        'walletTransferCommand' => 'electrum-ltc -W :password payto :address :amount | electrum-ltc broadcast -',
     ],
 ];

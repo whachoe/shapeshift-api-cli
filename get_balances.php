@@ -11,6 +11,11 @@ set_time_limit(0);
 
 $options = parseArgs($argv);
 
+if (isset($options['--help'])) {
+    echo "Syntax: {$argv[0]} [--print-header]\n";
+    exit();
+}
+
 // Get conversion rates
 $from = array_keys($wallets);
 $to = array_keys($wallets);
@@ -31,7 +36,8 @@ $euroTotal = 0.0;
 $date = date("c");
 echo "$date;";
 foreach ($wallets as $wallet) {
-    $balance = getWalletAmount($wallet);
+    $p = \Payment\Payment::factory($wallet);
+    $balance = $p->getWalletAmountFriendly();
     $euroTotal += $balance * $rates[strtoupper($wallet['currency'])]['EUR'];
     echo "$balance;";
 }

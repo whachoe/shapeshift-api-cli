@@ -8,12 +8,20 @@ set_time_limit(0);
 // For these coins, we can do swaps
 $possibleSwaps = array_keys($wallets);
 
-$shifter = new \Shapeshift\Shapeshift();
+switch (SHIFTER) {
+    case SHIFTER_SHAPESHIFT:
+        $shifter = new \Shifters\Shapeshift\Shapeshift();
+        break;
+    case SHIFTER_CHANGELLY:
+        $shifter = new \Shifters\Changelly\Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
+        break;
+}
 
 // Get commandline options
 $options = parseArgs($argv);
-if (!isset($options['input']) || !isset($options['output'])) {
+if (isset($options['help']) || !isset($options['input']) || !isset($options['output'])) {
     echo "Syntax: {$argv[0]} --input=btc --output=eth";
+    echo "    This will try to shift as much coins as possible from the 'input' to the 'output' wallet.";
     exit();
 }
 
@@ -21,7 +29,7 @@ $input = strtolower($options['input']);
 $output = strtolower($options['output']);
 
 if (strlen($input) < 3 || strlen($output) < 3) {
-    echo "Specify input and output currency";
+    logger("Specify input and output currency");
     exit();
 }
 
@@ -35,67 +43,43 @@ if ($output == 'usd') {
 }
 
 if (!$shifter->checkAvailability($input, $output)) {
-    echo "$input or $output is not available on Shapeshift. Exiting\n";
+    logger("$input or $output is not available on Shapeshift. Exiting.");
     exit();
 }
 
 if ($input == $output) {
-    echo "Can't switch between the same currencies ($input). Exiting\n";
+    logger("Can't switch between the same currencies ($input). Exiting");
     exit();
 }
 
 // Check if we can shift for this pair
 if (!(in_array($input, $possibleSwaps) && in_array($output, $possibleSwaps))) {
-    echo "Input or output is USD . Please follow up manually\n";
+    logger("You're trying to shift an unsupported currency. Please follow up manually\nPossible currencies: ".implode(",", $possibleSwaps));
     exit();
 }
 
-echo "Working on shifting: $input to $output\n";
+logger("Working on shifting: $input to $output");
 
-
+$paymentProcessor = \Payment\Payment::factory($wallets[$input]);
 
 // pair = input_output
 $pair = "{$input}_{$output}";
 
-// First getting some info from shapeshift
-$marketInfo = $shifter->getMarketInfo($pair);
-
-if (!$marketInfo) {
-    echo "No marketinfo found. Exiting";
-    exit(1);
-}
-
-$rate = $marketInfo['rate'];
-$limit = (float) $marketInfo['limit'];
-$min = (float) $marketInfo['minimum'];
-$minerFee = (float) $marketInfo['minerFee'];
-
-if (!$rate) {
-    echo "No rate for $pair found. Exiting\n";
-    exit(1);
-}
-
-if (!$limit || !$min) {
-    echo "No valid limit ($limit) or minimum ($min) found. Exiting\n";
-    exit(1);
-}
+// Let the shifter do some checks on limits, rates...
+$amountToShift = $shifter->checkAmount($paymentProcessor, $pair);
 
 // Get wallet amount for input
-$walletAmount = (float)getWalletAmount($wallets[$input]);
-
-// Make sure we have at least minimum to work with
-if ($walletAmount < $min) {
-    echo "Not enough in wallet. Min: $min\n";
-    exit();
-}
-
-// amount_to_shift = min(limit, wallet_amount)
-$amountToShift = (float)min($walletAmount-$minerFee, $limit);
+$walletAmount = $paymentProcessor->getWalletAmount();
 
 // Ask for shift
-if ($amountToShift > 0.0) {
-    if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift, $minerFee)) {
-        echo "Failed to shift: $input -> $output ($amountToShift). Balance of wallet: $walletAmount\n";
+if ($amountToShift > 0) {
+    if (!$shifter->doShift($wallets[$input], $wallets[$output], $pair, $amountToShift)) {
+        logger("Failed to shift: $input -> $output (".strval($amountToShift). "). Balance of wallet: $walletAmount");
         exit();
+    } else {
+        write_transaction_log($wallets[$input], $wallets[$output], $amountToShift);
     }
+} else {
+    logger("Error: Amount was 0 or negative:".strval($amountToShift));
+    exit();
 }

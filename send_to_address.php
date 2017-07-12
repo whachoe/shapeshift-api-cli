@@ -7,7 +7,7 @@ set_time_limit(0);
 
 // Get commandline options
 $options = parseArgs($argv);
-if (!$options['from'] || !$options['to'] || !$options['amount']) {
+if (isset($options['help']) || !$options['from'] || !$options['to'] || !$options['amount']) {
     echo "Syntax: {$argv[0]} --from=btc --to=the_destination_btc_address --amount=3.054 --fee=0.05 --paymentID=payment_ID_for_XMR_transaction";
     exit();
 }
@@ -22,7 +22,7 @@ if (!$wallet) {
     exit();
 }
 
-$paymentProcessor = Payment\Payment::factory($from);
+$paymentProcessor = Payment\Payment::factory($wallet);
 $paymentProcessor->toAddress = $options['to'];
 $paymentProcessor->amount = $options['amount'];
 if ($paymentProcessor instanceof \Payment\XMRPayment) {

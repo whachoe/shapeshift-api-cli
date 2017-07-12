@@ -1,74 +1,6 @@
 <?php
 require_once('Payment/Payment.php');
 
-/**
- * Check the balance of a wallet
- *
- * @param $wallet
- * @return float
- */
-function getWalletAmount($wallet)
-{
-    $balance = 0.0;
-    $command = str_replace([':user', ':password', ':fromAddress'], [$wallet['user'], $wallet['password'], $wallet['address']], $wallet['walletBalanceCommand']);
-
-    switch ($wallet['currency']) {
-        case 'xmr':
-            $output = `$command`;
-            try {
-                $data = json_decode($output, true);
-                if (isset($data['result']) && isset($data['result']['balance'])) {
-                    $balance = (float) $data['result']['balance']/\Payment\XMRPayment::MONERO_BASE_CONVERSION;
-                }
-            } catch (\Exception $e) {
-                echo "XMR: Error getting wallet amount";
-                exit();
-            }
-            break;
-        case 'eth':
-            $output = `$command`;
-            try {
-                $data = json_decode($output, true);
-                if ($data['result']) {
-                    $balance = $data['result'];
-                }
-            } catch (\Exception $e) {
-                echo "ETH: Error getting wallet amount";
-                exit();
-            }
-            break;
-        case 'btc':
-            $output = `$command`;
-            try {
-                $data = json_decode($output, true);
-                if ($data['confirmed']) {
-                    $balance = $data['confirmed'];
-                }
-            } catch (\Exception $e) {
-                echo "BTC: Error getting wallet amount";
-                exit();
-            }
-            break;
-        case 'zec':
-            $balance = trim(`$command`);
-            break;
-        case 'ltc':
-            $output = `$command`;
-            try {
-                $data = json_decode($output, true);
-                if ($data['confirmed']) {
-                    $balance = $data['confirmed'];
-                }
-            } catch (\Exception $e) {
-                echo "LTC: Error getting wallet amount";
-                exit();
-            }
-            break;
-    }
-
-    return (float)$balance;
-}
-
 function getExchangeRate($from, $to)
 {
     $from = strtoupper($from);
@@ -125,4 +57,21 @@ function parseArgs($argv)
         }
     }
     return $o;
+}
+
+function logger($message, $logfile=LOGFILE)
+{
+    $logline = date("c")."\t".$message."\n";
+    file_put_contents($logfile, $logline, FILE_APPEND);
+
+    // Also print on screen
+    echo $logline."\n";
+}
+
+function write_transaction_log($inputWallet, $outputWallet, $amountToShift)
+{
+    $amountToShiftOutput = $amountToShift*getExchangeRate($inputWallet['currency'], $outputWallet['currency']);
+    $data = [date("c"), $inputWallet['currency'], $amountToShift, $outputWallet['currency'], $amountToShiftOutput];
+    $line = implode(';', $data)."\n";
+    file_put_contents(TRANSACTION_CSV_FILE, $line, FILE_APPEND);
 }

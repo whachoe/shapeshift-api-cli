@@ -12,8 +12,10 @@ abstract class Payment
     protected $walletConfig;
 
     abstract public function parseShapeshiftResponse($response);
-
+    abstract public function parseChangellyResponse($response);
     abstract public function send();
+    abstract public function getWalletAmountFriendly();
+    abstract public static function toBase($amount);
 
     public function __construct($walletConfig)
     {
@@ -25,11 +27,11 @@ abstract class Payment
 
     protected function executeSend($command)
     {
-        echo $command . "\n";
+        logger("Payment Command: $command");
 
         // Uncomment when testing is done:
-        // $response = `$command`;
-        // echo $response."\n";
+//        $response = `$command`;
+//        logger("Payment response: $response");
 
         return true;
     }
@@ -43,5 +45,11 @@ abstract class Payment
             case 'ltc': return new LTCPayment($walletConfig);
             case 'zec': return new ZECPayment($walletConfig);
         }
+    }
+
+    public function getWalletAmount()
+    {
+        $command = str_replace([':user', ':password', ':fromAddress'], [$this->walletConfig['user'], $this->walletConfig['password'], $this->walletConfig['address']], $this->walletConfig['walletBalanceCommand']);
+        return `$command`;
     }
 }

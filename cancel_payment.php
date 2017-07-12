@@ -7,7 +7,7 @@ set_time_limit(0);
 
 // Get commandline options
 $options = parseArgs($argv);
-if (!$options[0]) {
+if (!$options[0] || $options['--help']) {
     echo "Syntax: {$argv[0]} address";
     exit();
 }
@@ -15,7 +15,7 @@ if (!$options[0]) {
 $shifter = new \Shapeshift\Shapeshift();
 
 if ($shifter->cancelPending($address)) {
-    echo "Order cancelled";
+    logger("Order cancelled");
 } else {
-    echo "Order not cancelled";
+    logger("Order not cancelled");
 }
