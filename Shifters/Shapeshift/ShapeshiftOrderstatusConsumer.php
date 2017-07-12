@@ -1,4 +1,6 @@
 <?php
+namespace Shifters\Shapeshift;
+
 include_once "vendor/autoload.php";
 include_once "config.php";
 include_once "lib.php";
@@ -38,7 +40,7 @@ class ShapeshiftOrderstatusConsumer {
     public function process($msg)
     {
         // Check orderstatus
-        $shifter = new \Shapeshift\Shapeshift();
+        $shifter = new Shapeshift();
         $statusObj = $shifter->orderInfo($msg['orderId']);
 
         if (!$statusObj || isset($statusObj['error']))

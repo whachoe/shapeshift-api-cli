@@ -26,13 +26,14 @@ class XMRPayment extends Payment
 
     public function parseChangellyResponse($response)
     {
-        $this->toAddress = $response['address'];
+        $this->toAddress = $response['result']['address'];
+        $this->paymentID = $response['result']['extraId'];
         return  true;
     }
 
     public function send()
     {
-        if (!$this->toAddress || !$this->paymentID || !$this->amount) {
+        if (!$this->toAddress || !$this->amount) {
             logger("XMRPayment: Missing parameters. We need 'toAddress' and 'amount");
             return false;
 

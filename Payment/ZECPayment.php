@@ -23,7 +23,7 @@ class ZECPayment extends Payment
 
     public function parseChangellyResponse($response)
     {
-        $this->toAddress = $response['address'];
+        $this->toAddress = $response['result']['address'];
         return  true;
     }
 

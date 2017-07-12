@@ -72,11 +72,16 @@ class Changelly
                 "address"   => $to['address'],
                 // "extraId": null
             ];
-            logger("Changelly call: ".var_export($data_to_send));
+            logger("Changelly call: ".var_export($data_to_send, true));
 
             $this->jsonrpcClient->query($this->getId(), 'generateAddress', $data_to_send);
             $response = $this->jsonrpcClient->send();
-            logger("Changelly response: ".var_export($response));
+            logger("Changelly response: ".var_export($response, true));
+
+            if (!isset($response['result'])) {
+                logger("XMRPayment: Error parsing changelly message: ".var_export($response, true));
+                return false;
+            }
 
             $paymentProcessor = Payment::factory($from);
             $paymentProcessor->amount = $amountToShift;
