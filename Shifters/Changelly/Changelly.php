@@ -6,6 +6,11 @@ use Payment\Payment;
 use Datto\JsonRpc\Http\Client as JsonRpcClient;
 use Pheanstalk\Pheanstalk;
 
+/**
+ * Class Changelly
+ * @package Shifters\Changelly
+ * todo: Add order status tracking
+ */
 class Changelly
 {
     private $baseUrl = 'https://api.changelly.com';

@@ -13,7 +13,19 @@ if (isset($options['help']) || !$options['address']) {
     exit();
 }
 
-$shifter = new \Shapeshift\Shapeshift();
-logger("get_status: {$options['address']}");
-$response = $shifter->getStatusOfDeposit($options['address']);
-var_dump($response);
+switch (SHIFTER) {
+    case SHIFTER_SHAPESHIFT:
+        $shifter = new \Shifters\Shapeshift\Shapeshift();
+        logger("get_status: {$options['address']}");
+        $response = $shifter->getStatusOfDeposit($options['address']);
+        var_dump($response);
+        break;
+    case SHIFTER_CHANGELLY:
+        $shifter = new \Shifters\Changelly\Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
+        $response = $shifter->getTransactions(null, $options['address']);
+        var_dump($response);
+        $response2 = $shifter->getStatus($response[0]['id']);
+        var_dump($response2);
+        break;
+}
+
