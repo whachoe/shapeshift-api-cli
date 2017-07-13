@@ -67,7 +67,7 @@ class Changelly
 
         $amountToShift = $walletAmount*90/100; // leave a bit of money for insurance and costs
 
-        return $amountToShift;
+        return $paymentProcessor->toBase($amountToShift);
     }
 
     public function doShift($from, $to, $pair, $amountToShift, $minerFee=0)
@@ -86,7 +86,7 @@ class Changelly
             logger("Changelly response: ".var_export($response, true));
 
             if (!isset($response['result'])) {
-                logger("XMRPayment: Error parsing changelly message: ".var_export($response, true));
+                logger("Changelly: Error parsing changelly message: ".var_export($response, true));
                 return false;
             }
 
