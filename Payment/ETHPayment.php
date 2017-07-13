@@ -86,4 +86,9 @@ class ETHPayment extends Payment
     {
         return $amount * self::WEI;
     }
+
+    public static function fromBase($amount)
+    {
+        return $amount / self::WEI;
+    }
 }

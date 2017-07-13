@@ -61,4 +61,9 @@ class ZECPayment extends Payment
     {
         return $amount;
     }
+
+    public static function fromBase($amount)
+    {
+        return $amount;
+    }
 }

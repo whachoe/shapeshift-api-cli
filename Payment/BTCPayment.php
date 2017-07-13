@@ -73,4 +73,9 @@ class BTCPayment extends Payment
     {
         return $amount;
     }
+
+    public static function fromBase($amount)
+    {
+        return $amount;
+    }
 }
