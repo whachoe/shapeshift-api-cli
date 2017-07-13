@@ -24,8 +24,10 @@ switch (SHIFTER) {
         $shifter = new \Shifters\Changelly\Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
         $response = $shifter->getTransactions(null, $options['address']);
         var_dump($response);
-        $response2 = $shifter->getStatus($response[0]['id']);
-        var_dump($response2);
+        if ($response && isset($response['result'])) {
+            $response2 = $shifter->getStatus($response[0]['id']);
+            var_dump($response2);
+        }
         break;
 }
 
