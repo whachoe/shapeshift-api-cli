@@ -65,7 +65,7 @@ class Changelly
             exit();
         }
 
-        $amountToShift = $walletAmount*90/100; // leave a bit of money for insurance and costs
+        $amountToShift = $walletAmount*0.8; // leave a bit of money for insurance and costs
 
         return $paymentProcessor->toBase($amountToShift);
     }

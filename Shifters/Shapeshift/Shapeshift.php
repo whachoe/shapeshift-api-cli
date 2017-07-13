@@ -213,7 +213,7 @@ class Shapeshift {
             exit();
         }
 
-        $amountToShift = min($walletAmount*90/100, $limit);
+        $amountToShift = min($walletAmount*0.8, $limit);
 
         return $amountToShift;
     }
