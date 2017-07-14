@@ -5,12 +5,16 @@ include_once "lib.php";
 
 use Pheanstalk\Pheanstalk;
 
-class TwitterLogConsumer {
-    var $pairs = ['BTCUSD', 'ETHBTC', 'XMRBTC', 'ZECUSD', 'LTCBTC', 'ETHUSD'];
+class TwitterLogConsumer
+{
+    var $currencies;
 
     public function __construct()
     {
+        global $wallets;
+
         $this->client = new Pheanstalk('127.0.0.1');
+        $this->currencies = array_keys($wallets);
     }
 
     public function listen()
@@ -30,29 +34,26 @@ class TwitterLogConsumer {
     {
         if ($msg['text']) {
             $text = urldecode($msg['text']);
-            $input = ''; $output = '';
+            $input = '';
+            $output = '';
 
             if (strpos($text, "long") > 0) {
                 $matches = [];
                 if (preg_match('/([A-Z]{6})/', $text, $matches)) {
-                    if (in_array($matches[1], $this->pairs)) {
-                        $output = substr($matches[1], 0, 3);
-                        $input = substr($matches[1], 3, 3);
-                    }
+                    $output = substr($matches[1], 0, 3);
+                    $input = substr($matches[1], 3, 3);
                 }
             } elseif (strpos($text, 'short') > 0) {
                 $matches = [];
                 if (preg_match('/([A-Z]{6})/', $text, $matches)) {
-                    if (in_array($matches[1], $this->pairs)) {
-                        $input = substr($matches[1], 0, 3);
-                        $output = substr($matches[1], 3, 3);
-                    }
+                    $input = substr($matches[1], 0, 3);
+                    $output = substr($matches[1], 3, 3);
                 }
             }
 
-            if ($input && $output) {
+            if (in_array($input, $this->currencies) && in_array($output, $this->currencies)) {
                 $command = "php do_a_shift.php --input={$input} --output=$output";
-                echo "Twitter consumer running: ".$command."\n";
+                echo "Twitter consumer running: " . $command . "\n";
                 `$command`;
             }
         }
