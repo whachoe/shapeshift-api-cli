@@ -15,6 +15,7 @@ class TwitterLogConsumer
 
         $this->client = new Pheanstalk('127.0.0.1');
         $this->currencies = array_keys($wallets);
+        $this->currencies[] = 'USD';
     }
 
     public function listen()
