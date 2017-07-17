@@ -4,8 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3745cc19fbeb13e4fb16425801bc9fe",
+    "content-hash": "ce65cbaf9c818a3e1fc6a49412446459",
     "packages": [
+        {
+            "name": "danielmewes/php-rql",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielmewes/php-rql.git",
+                "reference": "393a49ab5c3ce2cb7f3fc5c985e612b77ce472cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmewes/php-rql/zipball/393a49ab5c3ce2cb7f3fc5c985e612b77ce472cd",
+                "reference": "393a49ab5c3ce2cb7f3fc5c985e612b77ce472cd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "dev-master",
+                "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "~2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "rdb/rdb.php"
+                ],
+                "psr-4": {
+                    "r\\": "rdb/",
+                    "r\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Mewes",
+                    "email": "danielmewes@onlinehome.de",
+                    "homepage": "http://dmewes.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP client driver for the RethinkDB query language (ReQL)",
+            "homepage": "http://danielmewes.github.io/php-rql/",
+            "keywords": [
+                "database",
+                "driver",
+                "reql",
+                "rethinkdb"
+            ],
+            "time": "2016-05-31 01:55:32"
+        },
         {
             "name": "datto/json-rpc",
             "version": "4.0.3",
@@ -214,7 +268,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "datto/json-rpc-http": 20
+        "datto/json-rpc-http": 20,
+        "danielmewes/php-rql": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

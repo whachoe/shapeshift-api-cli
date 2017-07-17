@@ -32,7 +32,7 @@ class TwitterListener extends OauthPhirehose
                 $this->client->putInTube('vickiqueue', $status);
 
                 // Make a log
-                print $data['user']['screen_name'] . ': ' . urldecode($data['text']) . "\n";
+                echo date("c")."\t".$data['user']['screen_name'] . ': ' . urldecode($data['text']) . "\n";
             }
         }
     }

@@ -54,7 +54,7 @@ class TwitterLogConsumer
 
             if (in_array($input, $this->currencies) && in_array($output, $this->currencies)) {
                 $command = "php do_a_shift.php --input={$input} --output=$output";
-                echo "Twitter consumer running: " . $command . "\n";
+                echo date("c")."\tTwitter consumer running: " . $command . "\n";
                 `$command`;
             }
         }
