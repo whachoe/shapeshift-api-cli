@@ -15,9 +15,9 @@ class TwitterLogConsumer
 
         $this->client = new Pheanstalk('127.0.0.1');
         $this->currencies = array_keys($wallets);
-        $this->currencies[] = 'USD';
+        $this->currencies[] = 'usd';
 
-        array_walk($this->currencies, "strtoupper");
+
     }
 
     public function listen()
@@ -54,7 +54,7 @@ class TwitterLogConsumer
                 }
             }
 
-            if (in_array($input, $this->currencies) && in_array($output, $this->currencies)) {
+            if (in_array(strtolower($input), $this->currencies) && in_array(strtolower($output), $this->currencies)) {
                 $command = "php do_a_shift.php --input={$input} --output=$output";
                 echo date("c")."\tTwitter consumer running: " . $command . "\n";
                 `$command`;
