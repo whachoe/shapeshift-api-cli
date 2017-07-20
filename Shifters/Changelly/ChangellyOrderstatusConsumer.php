@@ -8,6 +8,9 @@ include_once "lib.php";
 use Pheanstalk\Pheanstalk;
 
 class ChangellyOrderstatusConsumer {
+    private $client;    // Pheanstalk client
+    private $db;        // Postgres db
+
     public function __construct()
     {
         $this->client = new Pheanstalk('127.0.0.1');
@@ -23,17 +26,6 @@ class ChangellyOrderstatusConsumer {
 
             if ($this->process($message))
                 $this->client->delete($job);
-            else {
-                // Retry 3 times, after 3 retries: bury the job. A separate process will pick up those jobs for further inspection by a human
-                if (isset($message['queuetimes']) && $message['queuetimes'] == 3) {
-                    logger(json_encode($message), LOGFILE_FAILED_ORDERS);
-                    $this->client->bury($job);
-                } else {
-                    $message['queuetimes'] = isset($message['queuetimes']) ? $message['queuetimes'] + 1 : 1;
-                    $this->client->putInTube('changelly_orderstatus', json_encode($message), Pheanstalk::DEFAULT_PRIORITY, 900); // wait 15 minutes before checking
-                    $this->client->delete($job);
-                }
-            }
         }
     }
 
@@ -41,12 +33,38 @@ class ChangellyOrderstatusConsumer {
     {
         // Check orderstatus
         $shifter = new Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
-        $statusObj = $shifter->getTransactions($msg['address']);
+        $statusObj = $shifter->getTransactions($msg['result']['address']);
 
-        if (!$statusObj || isset($statusObj['error']))
+        if (!$statusObj || isset($statusObj['error']) || !$statusObj['result'])
             return false;
 
-        return $statusObj['status'] == "finished";
+        $this->db = new \PDO("pgsql:host=localhost;dbname=".DB_NAME.";user=".DB_USER.";password=".DB_PW);
+
+        foreach ($statusObj['result'] as $transaction) {
+            // Check if in database
+            $stmt = $this->db->prepare("SELECT * FROM transaction WHERE txid = ?");
+            // If exists: Update record in database
+            if ($stmt->execute([$transaction['id']])) {
+                while ($row = $stmt->fetch()) {
+                    $ins = $this->db->prepare("UPDATE transaction SET data=:json WHERE id=:rowid");
+                    $ins->bindParam(":json", $transaction);
+                    $ins->bindParam(":rowid", $row['id']);
+                    $ins->execute();
+                    $ins = null;
+                }
+            } else { // If not exists: Make record in database
+                $ins = $this->db->prepare("INSERT INTO transaction (txid, data) VALUES (?, ?)");
+                $ins->bindParam(1, $transaction['id']);
+                $ins->bindParam(2, $transaction);
+                $ins->execute();
+                $ins = null;
+            }
+
+            $stmt = null;
+        }
+
+        $this->db = null;
+        return true;
     }
 }
 
