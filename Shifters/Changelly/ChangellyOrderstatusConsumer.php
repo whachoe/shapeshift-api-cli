@@ -5,6 +5,8 @@ include_once "vendor/autoload.php";
 include_once "config.php";
 include_once "lib.php";
 
+error_reporting(E_ALL);
+
 use Pheanstalk\Pheanstalk;
 
 class ChangellyOrderstatusConsumer {
@@ -31,11 +33,13 @@ class ChangellyOrderstatusConsumer {
 
     public function process($msg)
     {
-        echo "Processing message: ".var_export($msg, true);
+        echo date("c")."\tProcessing message: ".var_export($msg, true);
 
         // Check orderstatus
         $shifter = new Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
         $statusObj = $shifter->getTransactions($msg['result']['address']);
+
+        echo date("c")."\tTransactions: ". var_export($statusObj);
 
         if (!$statusObj || isset($statusObj['error']) || !isset($statusObj['result']))
             return false;
