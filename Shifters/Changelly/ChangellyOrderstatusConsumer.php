@@ -38,7 +38,7 @@ class ChangellyOrderstatusConsumer {
 
         // Check orderstatus
         $shifter = new Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
-        $statusObj = $shifter->getTransactions($msg['result']['address']);
+        $statusObj = $shifter->getTransactions(null, $msg['result']['address']);
 
         echo date("c")."\tTransactions: ". var_export($statusObj, true);
 
