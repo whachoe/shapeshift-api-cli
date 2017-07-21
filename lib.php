@@ -76,3 +76,30 @@ function write_transaction_log($inputWallet, $outputWallet, $amountToShift)
     $line = implode(';', $data)."\n";
     file_put_contents(TRANSACTION_CSV_FILE, $line, FILE_APPEND);
 }
+
+function transactionToDb($transaction)
+{
+    $db = new \PDO("pgsql:host=localhost;dbname=".DB_NAME.";user=".DB_USER.";password=".DB_PW);
+
+    // Check if in database
+    $stmt = $db->prepare("SELECT * FROM transaction WHERE txid = ?");
+    // If exists: Update record in database
+    if ($stmt->execute([$transaction['id']])) {
+        while ($row = $stmt->fetch()) {
+            $ins = $this->db->prepare("UPDATE transaction SET data=:json WHERE id=:rowid");
+            $ins->bindParam(":json", json_encode($transaction));
+            $ins->bindParam(":rowid", $row['id']);
+            $ins->execute();
+            $ins = null;
+        }
+    } else { // If not exists: Make record in database
+        $ins = $this->db->prepare("INSERT INTO transaction (txid, data) VALUES (?, ?)");
+        $ins->bindParam(1, $transaction['id']);
+        $ins->bindParam(2, json_encode($transaction));
+        $ins->execute();
+        $ins = null;
+    }
+
+    $stmt = null;
+    $db = null;
+}
