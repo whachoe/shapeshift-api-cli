@@ -54,7 +54,7 @@ class ChangellyOrderstatusConsumer {
             if ($stmt->execute([$transaction['id']])) {
                 while ($row = $stmt->fetch()) {
                     $ins = $this->db->prepare("UPDATE transaction SET data=:json WHERE id=:rowid");
-                    $ins->bindParam(":json", $transaction);
+                    $ins->bindParam(":json", json_encode($transaction));
                     $ins->bindParam(":rowid", $row['id']);
                     $ins->execute();
                     $ins = null;
@@ -62,7 +62,7 @@ class ChangellyOrderstatusConsumer {
             } else { // If not exists: Make record in database
                 $ins = $this->db->prepare("INSERT INTO transaction (txid, data) VALUES (?, ?)");
                 $ins->bindParam(1, $transaction['id']);
-                $ins->bindParam(2, $transaction);
+                $ins->bindParam(2, json_encode($transaction));
                 $ins->execute();
                 $ins = null;
             }
