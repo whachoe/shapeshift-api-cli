@@ -38,16 +38,16 @@ class ChangellyOrderstatusConsumer {
 
         // Check orderstatus
         $shifter = new Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
-        $statusObj = $shifter->getTransactions(null, $msg['result']['address']);
+        $transactions = $shifter->getTransactions(null, $msg['result']['address']);
 
-        echo date("c")."\tTransactions: ". var_export($statusObj, true);
+        echo date("c")."\tTransactions: ". var_export($transactions, true);
 
-        if (!$statusObj || isset($statusObj['error']))
+        if (!$transactions || count($transactions) <1)
             return false;
 
         $this->db = new \PDO("pgsql:host=localhost;dbname=".DB_NAME.";user=".DB_USER.";password=".DB_PW);
 
-        foreach ($statusObj as $transaction) {
+        foreach ($transactions as $transaction) {
             // Check if in database
             $stmt = $this->db->prepare("SELECT * FROM transaction WHERE txid = ?");
             // If exists: Update record in database
