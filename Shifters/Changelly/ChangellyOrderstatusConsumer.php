@@ -31,6 +31,8 @@ class ChangellyOrderstatusConsumer {
 
     public function process($msg)
     {
+        echo "Processing message: ".var_export($msg, true);
+
         // Check orderstatus
         $shifter = new Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
         $statusObj = $shifter->getTransactions($msg['result']['address']);
