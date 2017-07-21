@@ -35,7 +35,7 @@ class ChangellyOrderstatusConsumer {
         $shifter = new Changelly(CHANGELLY_API_KEY, CHANGELLY_SECRET_KEY);
         $statusObj = $shifter->getTransactions($msg['result']['address']);
 
-        if (!$statusObj || isset($statusObj['error']) || !$statusObj['result'])
+        if (!$statusObj || isset($statusObj['error']) || !isset($statusObj['result']))
             return false;
 
         $this->db = new \PDO("pgsql:host=localhost;dbname=".DB_NAME.";user=".DB_USER.";password=".DB_PW);
