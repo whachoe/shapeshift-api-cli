@@ -96,7 +96,7 @@ class Changelly
             if ($paymentProcessor->parseChangellyResponse($response)) {
                 // Schedule job to check order-status
                 $queueclient = new Pheanstalk('127.0.0.1');
-                $queueclient->putInTube('changelly_orderstatus', json_encode($response), Pheanstalk::DEFAULT_PRIORITY, 60); // wait 1 minute before checking
+                $queueclient->putInTube('changelly_orderstatus', json_encode($response), Pheanstalk::DEFAULT_PRIORITY, 900); // wait 15 minutes before checking
 
                 // Do the payment
                 return $paymentProcessor->send();
