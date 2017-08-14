@@ -27,7 +27,7 @@ class TwitterListener extends OauthPhirehose
     {
         $data = json_decode($status, true);
         if (is_array($data) && isset($data['user']['screen_name'])) {
-            if (preg_match('/vickiethbot/i', $data['user']['screen_name'])) {
+            if (preg_match('/(vickiethbot|vickibtcbot|vickibotbtcusd)/i', $data['user']['screen_name'])) {
                 // Put it on the queue
                 $this->client->putInTube('vickiqueue', $status);
 
